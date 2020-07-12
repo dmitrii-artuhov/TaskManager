@@ -1,0 +1,33 @@
+@import '../../variables.scss';
+
+.board-info__meta {
+	display: flex;
+	align-items: center;
+	box-sizing: border-box;
+	padding: 10px 0 30px 0;
+
+	&-date {
+		h4 {
+			font-size: $title-font-size;
+			font-weight: 550;
+			color: #4E4C4C;
+			margin: 0 50px 0 0;
+		}
+
+		span {
+			font-size: $regular-font-size;
+			opacity: 0.5;
+		}
+	}
+
+	&-input {
+		font-size: $title-font-size;
+		font-weight: 550;
+		color: #4E4C4C;
+		margin: 0 50px 0 0;
+		padding: 0 10px !important;
+		border: none;
+		outline: none;
+		border-bottom: 1px solid rgba(0, 0, 0, .1);
+	}
+}

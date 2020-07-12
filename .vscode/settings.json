@@ -1,0 +1,7 @@
+{
+	"prettier.jsxSingleQuote": true,
+	"prettier.useTabs": true,
+	"emmet.includeLanguages": {
+			"javascript": "javascriptreact"
+	}
+}

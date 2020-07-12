@@ -1,0 +1,55 @@
+@import '../../variables.scss';
+
+
+.custom-input {
+	input {
+		width: 100%;
+		border: none;
+		background: $high-light-supporting-color;
+		color: #fff;
+		box-sizing: border-box;
+		padding: 15px 15px;
+		font-size: $board-header-font-size;
+		border-radius: 7px;
+		position: relative;
+
+		&::placeholder {
+			color: #fff;
+		}
+
+		&:focus {
+			outline: none;
+		}
+	}
+
+	&__wrapper {
+		position: relative;
+
+		img {
+			position: absolute;
+			width: 11px;
+			height: 12px;
+			top: 50%;
+			right: 20px;
+			transform: translateY(-50%);
+			cursor: pointer;
+		}
+	}
+
+	&__spinner {
+		position: absolute;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		top: 50%;
+		right: 20px;
+		transform: translateY(-50%);
+		
+		& > div {
+			width: 20px;
+			height: 20px;
+		}
+	}
+}
+
+

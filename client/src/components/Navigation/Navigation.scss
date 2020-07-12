@@ -1,0 +1,72 @@
+@import '../../variables.scss';
+
+.navigation {
+	position: relative !important;
+	top: 0 !important;
+	right: 0 !important;
+	width: 100%;
+	z-index: 1;
+
+	&.bg-dark {
+		background-color: $dark-main-color !important;
+	}
+
+	&__account {
+		display: inline !important;
+		cursor: pointer;
+	}
+
+	&__line {
+		display: block;
+		width: 1px;
+		margin: auto 5px;
+		height: 30px;
+		background-color: #fff;
+	}
+
+	&__button {
+		margin: 0 5px;
+		transition: .1s ease-in;
+
+		&:hover {
+			opacity: 0.5;
+		}
+	}
+
+	p {
+		color: #fff;
+		cursor: default;
+		opacity: 0.75;
+		margin: 0 !important;
+		padding: 8px !important;
+	}
+
+	a {
+		color: #fff !important;
+	}
+}
+
+@media (max-width: 576px) {
+	.navigation {
+		&__line {
+			display: none;
+		}
+
+		&__button {
+			opacity: .7;
+		}
+
+		p {
+			padding: 8px 0 !important;
+		}
+	}
+
+	.nav {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
+		padding: 10px 0;
+		height: auto !important;
+	}
+}

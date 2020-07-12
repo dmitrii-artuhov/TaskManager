@@ -1,0 +1,129 @@
+@import '../../variables.scss';
+
+.card-wrapper {
+	top: 0;
+	left: 0;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	overflow-y: auto;
+}
+
+.overlay { 
+	width: 100%;
+	height: 100%;
+	background-color: $dark-main-color;
+	position: absolute;
+	opacity: .4;
+	top: 0;
+	left: 0;
+	z-index: 2;
+}
+
+.fullview {
+	margin: 100px 0;
+	left: 50%;
+	transform: translateX(-50%);
+	position: absolute;
+	width: 80%;
+	max-width: 800px;
+	min-width: 300px;
+	z-index: 3;
+	border-radius: 7px;
+	overflow: hidden;
+	display: flex;
+
+	&__content {
+		width: 100%;
+		box-sizing: border-box;
+		padding: 20px 25px;
+		background-color: #fff;
+	}
+
+	&__close {
+		top: 15px;
+		span {
+			background-color: #fff;
+		}
+	}
+
+	&__block {
+		width: 100%;
+		color: #4E4C4C;
+		margin-top: 20px;
+		display: flex;
+		align-items: flex-start;
+
+		img {
+			margin: 3px 15px 0 0;
+		}
+	}
+
+	&__text-wrapper {
+		width: 100%;
+		color: #4E4C4C;
+
+		h5 {
+			font-size: $regular-font-size;
+			font-weight: 600;
+		}
+
+		p {
+			font-size: 14px;
+			opacity: .8;
+			margin: 0;
+		}
+	}
+
+	&__title {
+		margin-bottom: 50px;
+
+		h3 {
+			width: 100%;
+			margin: 0;
+			font-size: 20px;
+			font-weight: 600;
+		}
+	}
+
+}
+
+
+.card__input {
+	width: 100%;
+	border: none;
+	outline: none;
+	border-bottom: 1px solid rgba(0, 0, 0, .1);
+	color: #4E4C4C;
+	font-size: 20px;
+	font-weight: 600;
+
+	&-todo {
+		transform: translateY(-3px);
+		background-color: transparent;
+		font-weight: 400;
+		font-size: $small-font-size;
+	}
+}
+.card__textarea {
+	border: none;
+	outline: none;
+	border-bottom: 1px solid rgba(0, 0, 0, .1);
+	color: #4E4C4C;
+	font-size: 14px;
+	opacity: .8;
+	width: 100%;
+}
+
+
+@media all and (max-width: 768px) {
+	.fullview {
+		flex-direction: column;
+
+		&__close {
+			span {
+				background-color: #c4c4c4;
+			}
+		}
+	}
+}

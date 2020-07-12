@@ -1,0 +1,85 @@
+@import '../../variables.scss';
+
+.boards {
+	margin-top: 25px;
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+
+	&__title h6 {
+		font-weight: bold;
+		font-size: $regular-font-size;
+	}
+
+	&__content {
+		margin: 30px 0;
+		display: inline-grid;
+		grid-template-columns: repeat(auto-fit, 280px);
+		grid-gap: 15px;
+	}
+}
+
+
+@media (max-width: 768px) {
+	.boards {
+		&__content {
+			justify-content: center;
+		}
+	}
+}
+
+
+// CustomInput.js
+
+.boards {
+	&__create {
+		input {
+			width: 100%;
+			border: none;
+			background: $high-light-supporting-color;
+			color: #fff;
+			box-sizing: border-box;
+			padding: 15px 15px;
+			font-size: $board-header-font-size;
+			border-radius: 7px;
+			position: relative;
+
+			&::placeholder {
+				color: #fff;
+			}
+
+			&:focus {
+				outline: none;
+			}
+		}
+	}
+
+	&__input-wrapper {
+		position: relative;
+
+		img {
+			position: absolute;
+			width: 11px;
+			height: 12px;
+			top: 50%;
+			right: 20px;
+			transform: translateY(-50%);
+			cursor: pointer;
+		}
+	}
+
+	&__input-spinner {
+		position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 50%;
+    right: 20px;
+		transform: translateY(-50%);
+		
+		& > div {
+			width: 20px;
+			height: 20px;
+		}
+	}
+}

@@ -1,0 +1,130 @@
+@import '../../variables.scss';
+
+.modal {
+	&__spinner {
+		margin: 0px 0 3px 10px !important;	
+	}
+
+	&__alert {
+		display: flex !important;
+		justify-content: space-between !important;
+		align-items: center !important;
+
+		p {
+			margin: 0;
+		}
+	}
+}
+
+.custom-modal {
+	&__header {
+		justify-content: center !important;
+		align-items: center !important;
+		border-bottom: none !important;
+	}
+
+	button.close {
+		display: none;	
+	}
+
+	&__button {
+		position: absolute;
+		width: 25px;
+		height: 25px;
+		margin: 0;
+		padding: 0;
+		right: 15px;
+		outline: none;
+		border: none;
+		background-color: transparent;
+
+		&:active {
+			outline: none
+		}
+
+		span {
+			display: block;
+			position: absolute;
+			width: 100%;
+			height: 1px;
+			background-color: $close-btn-color;
+			margin: 0;
+			padding: 0;
+			top: 50%;
+			left: 50%;
+
+			&:first-child {
+				transform: translate(-50%, -50%) rotate(45deg);
+			}
+
+			&:last-child {
+				transform: translate(-50%, -50%) rotate(-45deg);
+			}
+		}
+	}
+
+	&__submit-button {
+		width: auto !important;
+		border: none !important;
+		font-size: 15px !important;
+		box-sizing: border-box;
+		padding: 10px 50px !important;
+		margin: 0 auto;
+
+		&:hover {
+			border: none !important;
+			background-color: $dark-main-color !important;
+		}
+
+		&:focus {
+			outline: none !important;
+			background-color: $dark-main-color !important;
+		}
+	}
+
+	h5 {
+		font-size: $modal-header-font-size !important;
+		font-weight: bold !important;
+	}
+
+	&__body {
+		padding-top: 0 !important;
+	}
+
+	&__field {
+		label {
+			color: rgba(0, 0, 0, 0.5);
+			margin-bottom: 0 !important;
+			font-size: $modal-font-size;
+		}
+
+		input {
+			border: none !important;
+			border-radius: 0 !important;
+			border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+			padding-left: 0;
+
+			&:focus {
+				outline: none !important;
+				box-shadow: none !important;
+			}
+		}
+	}
+}
+
+
+.navigation {
+	&__button {
+		cursor: pointer;
+	}
+}
+
+
+@media (max-width: 576px) {
+	.register {
+		&__alert {
+			padding: 10px 15px !important;
+			font-size: $small-font-size;
+		}
+	}
+}

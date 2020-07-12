@@ -1,0 +1,131 @@
+@import '../../variables.scss';
+
+
+
+.boards {
+	&__board {
+		min-width: 280px;
+		padding: 10px 15px;
+		color: #fff;
+		border-radius: 7px;
+		position: relative;
+		overflow: hidden;
+		transition: .2s ease-out;
+		box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.2);
+
+		&:hover {
+			color: #fff;
+			text-decoration: none;
+			box-shadow: 1px 3px 7px rgba(0, 0, 0, 0.4);
+		}
+
+		img {
+			object-fit: cover;
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			z-index: -1;
+			top: 0;
+			left: 0;
+		}
+	}
+
+	&__info {
+		p {
+			text-align: center;
+			font-weight: 500;
+			font-size: $board-header-font-size;
+		}
+
+		ul {
+			padding: 0;
+			margin: 0;
+			list-style: none;
+
+			li {
+				font-size: $small-font-size;
+			}
+		}
+	}
+
+	&__participants {
+		display: flex;
+		justify-content: center;
+		box-sizing: border-box;
+		padding: 25px 0 30px 0;
+
+		ul {
+			list-style: none;
+			margin: 0;
+			padding: 0;
+			display: flex;
+			width: 80%;
+			flex-wrap: wrap;
+			justify-content: center;
+
+			li {
+				display: inline-block;
+				position: relative;
+			}
+		}
+	}
+
+	&__user {
+		cursor: pointer;
+		width: 30px;
+		height: 30px;
+		border-radius: 7px;
+		margin: 5px 5px 0 5px;
+		position: relative;
+
+		img {
+			z-index: 0;
+			position: absolute;
+			top: 0;
+			left: 0;
+			object-fit: cover;
+			width: 100%;
+			height: 100%;
+		}
+
+		&:hover ~ &-target {
+			opacity: 1;
+			margin-top: 0;
+			z-index: 1000;
+		}
+	}
+
+	.target-box {
+		cursor: default;
+		position: absolute;
+		top: 100%;
+		font-size: $target-box-font-size;
+		background: $dark-main-color;
+		top: calc(100% + 10px);
+		min-width: 80px;
+		border-radius: 4px;
+    text-align: center;
+    right: 55%;
+		transform: translate(50%, 0);
+		box-sizing: border-box;
+		opacity: 0;
+		margin-top: 5px;
+		transition: .2s ease;
+
+		&::before {
+			content: '';
+			position: absolute;
+			width: 10px;
+			height: 10px;
+			transform: rotate(45deg) translate(-50%, 0);
+			background-color: $dark-main-color;
+			top: 0;
+			left: 50%;
+		}
+
+		span {
+			display: block;
+			padding: 6px 6px;
+		}
+	}
+}

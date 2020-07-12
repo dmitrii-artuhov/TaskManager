@@ -1,0 +1,127 @@
+@import '../../variables.scss';
+
+.color-pallete {
+		// modal
+		&__modal {
+			overflow: hidden;
+			z-index: 100;
+			width: 120px; // 200px;
+			border-radius: 7px;
+			box-shadow: 0 1px 7px rgba(0, 0, 0, .3);
+			box-sizing: border-box;
+			padding: 5px 7px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: space-between;
+			position: absolute;
+			left: calc(100% + 5px);
+			top: 0;
+			background-color: #fff;
+		}
+
+		&__input {
+			width: 100%;
+			border: none;
+			outline: none;
+			border-bottom: 1px solid rgba(0, 0, 0, .1);
+			color: #000;
+			margin-right: 10px;
+			font-size: $small-font-size;
+			font-weight: 600;
+		}
+
+		&__title {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		&__close {
+			margin-left: 7px;
+			position: relative;
+			width: 12px;
+			height: 12px;
+			cursor: pointer;
+			z-index: 1;
+	
+			span {
+				display: block;
+				width: 12px;
+				height: 1px;
+				border-radius: 7px;
+				background-color: #C4C4C4;
+				position: absolute;
+				top: 50%;
+				left: 50%;
+			}
+	
+			span:first-child {
+				transform: translate(-50%, -50%) rotate(45deg);
+			}
+			
+			span:last-child {
+				transform: translate(-50%, -50%) rotate(-45deg);
+			}
+		}
+
+		&__pallete {
+			box-sizing: border-box;
+			padding: 5px;
+			flex-wrap: wrap;
+			display: flex;
+			margin-top: 5px;
+			width: 100%;
+			background-color: $light-faded-background-color;
+			border-radius: 7px;
+		}
+
+		&__color {
+			cursor: pointer;
+			margin: 2px;
+			border-radius: 50%;
+			width: 15px;
+			height: 15px;
+			background-color: #000;
+			transition: all .1s ease-in;
+
+			&:hover {
+				box-shadow: 0 1px 5px rgba(0, 0, 0, .3);
+			}
+		}
+
+		&__actions {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			flex-direction: column;
+			padding: 0;
+			margin: 0;
+			list-style: none;
+
+			&-item {
+				font-size: $small-font-size;
+				box-sizing: border-box;
+				padding: 2px 5px;
+				cursor: pointer;
+				display: block;
+				opacity: 50%;
+				border-bottom: 1px solid rgba(0, 0, 0, .2);
+				transition: all .1s ease-in;
+
+				&:hover {
+					opacity: 80%
+				}
+			}
+		}
+}
+
+
+@media all and (max-width: 768px) {
+	.color-pallete {
+		&__modal {
+			left: -40px;
+			top: 100%;
+		}
+	}
+}

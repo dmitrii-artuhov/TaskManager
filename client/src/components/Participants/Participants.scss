@@ -1,0 +1,32 @@
+@import '../../variables.scss';
+
+.board-info__meta {
+	&-participants {
+		display: flex;
+		justify-content: center;
+		box-sizing: border-box;
+
+		ul {
+			list-style: none;
+			margin: 0;
+			padding: 0;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+
+			li {
+				border-radius: 5px;
+				cursor: pointer;
+				margin: 0 5px 0 0;
+				display: inline-block;
+				position: relative;
+				box-shadow: 0 1px 7px rgba(0, 0, 0, .2);
+			}
+		}
+	}
+
+	&-user {
+		width: 35px;
+		height: 35px;
+	}
+}

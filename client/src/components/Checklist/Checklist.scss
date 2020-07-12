@@ -1,0 +1,167 @@
+@import '../../variables.scss';
+
+.fullview {
+	&__checklist {
+		&-body {
+			width: 100%;
+		}
+
+		&-progress {
+			width: 100%;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+
+			span {
+				font-size: $target-box-font-size;
+				font-weight: 600;
+				margin-right: 8px;
+			}
+		}
+
+		&-bar {
+			position: relative;
+			width: 100%;
+
+			span {
+				height: 3px;
+				border-radius: 7px;
+				display: block;
+				width: 100%;
+				position: absolute;
+				margin: 0;
+			}
+
+			span:first-child {
+				transition: width .2s ease-in;
+				width: 40%;
+				z-index: 1;
+				background-color: $high-light-supporting-color;
+			}
+
+			span:last-child {
+				background-color: $faded-background-color;
+			}
+		}
+
+		&-todo {
+			margin-top: 20px;
+			background-color: $light-faded-background-color;
+			border-radius: 7px;
+			box-sizing: border-box;
+			padding: 10px 20px;
+
+			ul {
+				list-style: none;
+				margin: 0;
+				padding: 0;
+			}
+		}
+
+		&-item {
+			cursor: pointer;
+			display: flex;
+			position: relative;
+			justify-content: space-between;
+			align-items: center;
+			box-sizing: border-box;
+			padding: 5px 15px;
+			border-radius: 5px;
+			transition: .1s ease-in;
+
+			&:hover {
+				background-color: $faded-background-color;
+			}
+
+			&--completed .fullview__checklist-toggle {
+				span:last-child {
+					background: $high-light-supporting-color;
+				}
+			}
+
+			img {
+				margin: 0;
+			}
+		}
+
+		&-cross {
+			img {
+				cursor: pointer;
+			}
+		}
+
+		&-text {
+			width: 100%;
+			position: relative;
+			display: flex;
+			align-items: center;
+
+			P {
+				margin: 0;
+				font-size: $small-font-size;
+				max-width: 90%;
+			}
+		}
+
+		&-toggle {
+			margin-top: 3px;
+			align-self: flex-start;
+			cursor: pointer;
+			width: 11px;
+			height: 11px;
+			position: relative;
+			margin-right: 5px;
+
+			span {
+				display: block;
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				margin: 0;
+			}
+
+			span:first-child {
+				width: 11px;
+				height: 11px;
+				border-radius: 3px;
+				background: $faded-background-color;
+				transform: translate(-50%, -50%);
+			}
+
+			span:last-child {
+				width: 7px;
+				height: 7px;
+				border-radius: 3px;
+				background: #fff;
+				transform: translate(-50%, -50%);
+			}
+		}
+
+		&-add {
+			&:active {
+				outline: none;
+			}
+
+			box-sizing: border-box;
+			margin-top: 20px;
+			padding: 3px 20px;
+			border: 1px solid $high-light-supporting-color;
+			border-radius: 3px;
+			color: $high-light-supporting-color;
+			outline: none;
+			font-size: $small-font-size;
+			-webkit-user-select: none;
+		}
+	}
+}
+
+
+@media all and (max-width: 768px) {
+	.fullview {
+		&__checklist {
+			&-todo {
+				padding: 10px;
+			}
+		}
+	}
+}

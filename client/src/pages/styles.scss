@@ -1,0 +1,10 @@
+
+// Board page
+@media all and (max-width: 768px) {
+	.board-page-wrapper {
+		min-height: calc(100vh - 56px);
+		position: relative;
+		flex-direction: column-reverse;
+		justify-content: space-between;
+	}
+}

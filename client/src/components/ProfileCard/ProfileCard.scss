@@ -1,0 +1,131 @@
+@import '../../variables.scss';
+
+.profile-card {
+	max-width: 800px;
+	overflow: hidden;
+	display: flex;
+	justify-content: space-between;
+	position: relative;
+	// flex-wrap: wrap;
+	box-sizing: border-box;
+	margin: 100px auto;
+	width: 90%;
+	border-radius: 7px;
+	box-shadow: 0 1px 7px rgba(0, 0, 0, 0.15);
+
+	input[type="file"] {
+		display: none;
+	}
+
+	&__info {
+		box-sizing: border-box;
+		font-size: $small-font-size;
+		display: flex;
+		flex-direction: column;
+		margin: 70px auto;
+		text-align: center;
+		cursor: default;
+
+		h6 {
+			margin-bottom: 30px;
+			font-weight: bold;
+			font-size: $profile-header-font-size;
+		}
+
+		hr {
+			height: 1px;
+			width: 90%;
+			margin: 15px auto;
+			border-radius: 7px;
+		}
+	}
+
+	&__field {
+		text-align: left;
+		margin: 15px 15px;
+
+		ul {
+			padding: 0;
+			margin: 0;
+			list-style: none;
+			display: flex;
+			justify-content: space-between;
+		}
+
+		li {
+			margin: 0 20px;
+			display: inline-block;
+			font-size: $profile-font-size;
+
+			&:first-child {
+				color: rgba($color: #000000, $alpha: 0.5);
+			}
+		}
+	}
+
+	&__avatar {
+		background-color: $blur-color;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		box-sizing: border-box;
+		padding: 0 24px;
+	}
+
+	&__circle {
+		max-width: 200px;
+		max-height: 200px;
+		border-radius: 50%;
+		overflow: hidden;
+		position: relative;
+		box-shadow: 0 1px 7px rgba(0, 0, 0, 0.15);
+
+		img {
+			height: 100%;
+			width: 100%;
+			object-fit: cover;
+		}
+	}
+
+	&__button {
+		cursor: pointer;
+		color: #fff;
+		padding: 5px 20px;
+		box-sizing: border-box;
+		border-radius: .25rem;
+		margin-top: 10px;
+		font-size: $profile-small-font-size !important;
+	}
+}
+
+
+@media (max-width: 768px) {
+	.profile-card {
+		margin-top: 30px;
+		flex-direction: column-reverse;
+		justify-content: center;
+
+		&__info {
+			width: 100%;
+			margin: 30px auto;
+		}
+
+		&__avatar {
+			padding: 15px;
+			width: 100%;
+		}
+	}
+
+}
+
+@media (max-width: 576px) {
+	.profile-card {
+		&__field {
+			ul {
+				align-items: center;
+				flex-direction: column;
+			}
+		}
+	}
+}

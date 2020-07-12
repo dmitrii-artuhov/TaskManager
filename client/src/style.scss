@@ -1,0 +1,32 @@
+@import '~bootstrap/dist/css/bootstrap.min.css';
+@import './variables.scss';
+
+body {
+	font-family: 'Montserrat', sans-serif;
+}
+
+// Default layout elements styles
+.main-button {
+	background-color: $dark-main-color;
+	width: auto !important;
+	border: none !important;
+	box-sizing: border-box;
+
+	&:hover {
+		border: none !important;
+		background-color: $dark-main-color !important;
+	}
+
+	&:focus {
+		outline: none !important;
+		background-color: $dark-main-color !important;
+	}
+}
+
+.regular-input {
+	outline: none;
+	border: 1px solid #ccc;
+	box-sizing: border-box;
+	padding: 7px 10px;
+	border-radius: 7px;
+}

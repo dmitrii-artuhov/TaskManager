@@ -1,15 +1,13 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 // redux
-import { deleteList, renameList, createCard } from '../../actions/singleBoardActions';
+import { loadList, deleteList, renameList, createCard } from '../../actions/singleBoardActions';
 import { selectCardById } from '../../actions/singleCardActions';
 
 // components
 import ActionsModal from '../ActionsModal/ActionsModal';
 import CardsWrapper from '../CardsWrapper/CardsWrapper';
 
-// API
-import { getListById } from '../../api/lists';
 // styles
 import './List.scss';
 
@@ -23,7 +21,6 @@ class List extends Component {
 			// rename list
 			isRenamingList: false,
 			listTitle: this.props.list.title,
-
 			// cards
 			isCreatingCard: false,
 		}
@@ -38,35 +35,21 @@ class List extends Component {
 	}
 
 	componentDidUpdate = (prevProps) => {
-		// // check lists
-		// if (this.props.lists !== prevProps.lists) {
-		// 	const updatedList = this.props.lists.find((item) => item._id === this.props.list._id);
-		// 	// list might have been deleted
-		// 	if (updatedList) {
-		// 		this.setState({
-		// 			list: updatedList,
-		// 			cards: updatedList ? updatedList.cards : []
-		// 		});
-		// 	}
-		// }
+		// check if card is being created or it is already created
+		const { isCardCreating, cardCreatingListId, list } = this.props;
+
+		if ((isCardCreating && isCardCreating !== prevProps.isCardCreating && cardCreatingListId === list._id)
+				|| (!isCardCreating && isCardCreating !== prevProps.isCardCreating)) {
+			this.setState({
+				isCreatingCard: isCardCreating
+			});
+		}
 
 		// update list (if a card from it has just been viewed in fullscreen)
-		// if (this.props.selectedCard !== prevProps.selectedCard && !this.props.selectedCard.listId) {
-		// 	const { boardId, list } = this.state;
-
-		// 	getListById({ boardId, listId: list._id })
-		// 		.then(({ data }) => {
-
-		// 			this.setState({
-		// 				list: data.list,
-		// 				listTitle: data.list.title,
-		// 				cards: data.list.cards
-		// 			});
-		// 		})
-		// 		.catch((err) => {
-		// 			console.error(err.response);
-		// 		})
-		// }
+		if (this.props.selectedCard !== prevProps.selectedCard && !this.props.selectedCard.meta.listId) {
+			const { boardId, list } = this.props;
+			this.props.loadList({ boardId, listId: list._id });
+		}
 	}
 
 	// toggle actions menu
@@ -76,7 +59,7 @@ class List extends Component {
 		});
 	}
 
-	// CRUD for the list
+	// list
 	renameList = (e) => {
 		e.preventDefault();
 		
@@ -120,17 +103,14 @@ class List extends Component {
 		const { boardId, list } = this.props;
 
 		this.props.createCard({ boardId, listId: list._id, title: value });
-		
-		this.setState({
-			isCreatingCard: false
-		});
+		// componentDidUpdate will add the card to the list
 	}
 
 	viewCard = (cardId) => {
 		this.props.selectCardById({
 			cardId,
-			listId: this.state.list._id,
-			boardId: this.state.boardId
+			listId: this.props.list._id,
+			boardId: this.props.boardId
 		});
 	}
 
@@ -177,7 +157,8 @@ class List extends Component {
 					
 					<CardsWrapper
 					isCreatingCard={this.state.isCreatingCard}
-					createCard={this.createCard}
+					onCreate={this.createCard}
+					onView={(cardId) => this.viewCard(cardId)}
 					items={this.props.list.cards} />
 				
 				</div>
@@ -187,13 +168,17 @@ class List extends Component {
 }
 
 const mapStateToProps = (state) => ({
+	// lists
 	lists: state.singleBoard.lists,
 	isListDeleting: state.singleBoard.isListDeleting,
-	listDeletingId: state.singleBoard.listDeletingId
-	// selectedCard: state.singleCard,
+	listDeletingId: state.singleBoard.listDeletingId,
+	// cards
+	isCardCreating: state.singleBoard.isCardCreating,
+	cardCreatingListId: state.singleBoard.cardCreatingListId,
+	selectedCard: state.singleCard,
 });
 
 export default connect(
 	mapStateToProps,
-	{ deleteList, renameList, createCard, selectCardById }
+	{ loadList, deleteList, renameList, createCard, selectCardById }
 )(List);

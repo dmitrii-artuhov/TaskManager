@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react';
-import { addNewLabel, deleteLabelById } from '../../api/cards';
 
 // components
 import ColorPallete from '../ColorPallete/ColorPallete';
@@ -13,103 +12,85 @@ export default class Labels extends Component {
 		super(props);
 
 		this.state = {
-			card: null,
-			labels: [],
-			label: {
-				title: '',
-				color: ''
-			},
+			items: [],
 			palleteOpenId: -1
 		}
 	}
 
 	componentDidMount = () => {
-		// modal managment
-		window.addEventListener('click', this.togglePalleteModal);
+		// pallete modal
+		document.body.addEventListener('click', this.togglePalleteModalOuter);
+
+		this.setState({
+			items: this.props.items
+		});
 	}
 
 	componentWillUnmount = () => {
-		window.removeEventListener('click', this.togglePalleteModal);
+		document.body.removeEventListener('click', this.togglePalleteModalOuter);
 	}
 
 	componentDidUpdate = (prevProps) => {
-		// check for card
-		if (this.props.card !== prevProps.card) {
+		const { items } = this.props;
+		if (items !== prevProps.items) {
 			this.setState({
-				card: this.props.card,
-				labels: this.props.card ? this.props.card.labels : []
+				items
 			});
 		}
 	}
 
-	//--- Pallete Modal
-	togglePalleteModal = (e, id = -1) => {
-		if (id === -1 && e) {
-			if (e.target.closest('.color-pallete__modal') ||
-					e.target.closest('.fullview__labels-bars-badge')) 
-				return;
-		}
+	togglePalleteModal = (id = -1) => {
+		if (this.state.palleteOpenId !== -1) 
+			this.refs[`pallete-${this.state.palleteOpenId}`].saveChanges();
 
 		this.setState({
 			palleteOpenId: id
 		});
 	}
 
-	editLabel = (label) => {
-		let { labels } = this.state;
+	togglePalleteModalOuter = (e) => {
+		if (e.target.closest('.fullview__labels-bars-badge') || e.target.closest('.color-pallete__modal')) 
+			return;
 
-		labels = labels.map((item) => {
-			if (item._id === label._id) {
-				item = label;
-			}
-			return item;
-		});
+		if (this.state.palleteOpenId !== -1) 
+			this.refs[`pallete-${this.state.palleteOpenId}`].saveChanges();
 
 		this.setState({
-			labels
+			palleteOpenId: -1
 		});
 	}
 
 	addNewLabel = () => {
-		const { boardId } = this.props;
-		const cardId = this.state.card._id;
+		const defaultLabel = {
+			title: 'New label',
+			color: '#3d3d3d'
+		}
 
+		this.props.onAdd(defaultLabel);
+	}
 
-		addNewLabel({ boardId, cardId, label: { title: 'New label', color: '#3d3d3d' } })
-			.then(({ data }) => {
-				this.setState({
-					card: data.card,
-					labels: data.card.labels,
-					label: {
-						title: '',
-						color: ''
-					},
-					palleteOpenId: -1
-				});
-			})
-			.catch((err) => {
-				console.log(err.response);
-			})
+	applyChangesToLabel = (updatedLabel) => {
+		const newItems = this.state.items.map((label) => {
+			if (label._id === updatedLabel._id) {
+				label = updatedLabel;
+			}
+			return label;
+		})
+
+		this.setState({
+			items: newItems
+		});
+	}
+
+	updateLabel = (updatedLabel) => {
+		this.props.onUpdate(updatedLabel);
 	}
 
 	deleteLabel = (labelId) => {
-		const { card, boardId } = this.props;
-
-		deleteLabelById({ cardId: card._id, boardId, labelId })
-			.then(({ data }) => {
-				this.setState({
-					card: data.card,
-					labels: data.card.labels,
-					palleteOpenId: -1,
-					label: {
-						title: '',
-						color: ''
-					}
-				});
-			})
-			.catch((err) => {
-				console.error(err.response);
-			});
+		this.setState({
+			palleteOpenId: -1
+		});
+		this.props.onDelete(labelId);
 	}
 
 	render() {
@@ -120,23 +101,25 @@ export default class Labels extends Component {
 						<div className="fullview__text-wrapper fullview__labels-body">
 							<h5>Labels</h5>
 							<div className="fullview__labels-bars">
-								{ !this.state.card ? <p><Skeleton height={60} /></p> : this.state.labels.length ? this.state.labels.map((item, index) => (
+								{ !this.state.items ? <p><Skeleton height={60} /></p> : this.state.items.length ? this.state.items.map((label, index) => (
 									<div
 										className="fullview__labels-bars-wrapper"
-										key={index}>
+										key={label._id}>
 										<div
-										onClick={ () => this.togglePalleteModal(null, index) }
-										className="fullview__labels-bars-badge"
-										style={{ background: item.color }}>
-											{ item.title }
-										</div>	
+										onClick={ () => this.togglePalleteModal(index) }
+										className={`fullview__labels-bars-badge fullview__labels-bars-badge-${label._id}`}
+										style={{ background: label.color }}>
+											{ label.title }
+										</div>
 										<ColorPallete
-										data={ { boardId: this.props.boardId, cardId: this.state.card._id } }
-										label={item}
-										onEdit={ this.editLabel }
-										onDelete={ () => this.deleteLabel(item._id) }
-										onClose={ () => this.togglePalleteModal(null, -1) }
-										isOpen={ this.state.palleteOpenId === index } />
+										ref={`pallete-${index}`}
+										label={label}
+										onSave={(updatedLabel) => this.updateLabel(updatedLabel)}
+										onChange={(updatedLabel) => this.applyChangesToLabel(updatedLabel)}
+										onDelete={ () => this.deleteLabel(label._id) }
+										onClose={ () => this.togglePalleteModal() }
+										isOpen={ this.state.palleteOpenId === index }
+										/>
 									</div>
 								)) : <p>No labels</p> }
 							</div>

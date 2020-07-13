@@ -56,7 +56,7 @@ router.post('/get/:id', auth.ensureAuthentication, isBoardParticipant.checkBoard
 				return res.status(500).json({ msg: 'Internal server error' });
 			}
 
-			res.json({ list });
+			res.json({ msg: 'List successfully found', list });
 		});
 });
 

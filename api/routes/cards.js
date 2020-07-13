@@ -135,7 +135,7 @@ router.put('/update/:id', auth.ensureAuthentication, isBoardParticipant.checkBoa
 	const { id } = req.params;
 	const { title, description, status } = req.body;
 
-	if (!title && !description && !status) {
+	if (!title && description == undefined && !status) {
 		return res.status(400).json({ msg: "Specify the field which value should update" });
 	}
 
@@ -334,7 +334,7 @@ router.put('/:id/labels/update', auth.ensureAuthentication, isBoardParticipant.c
 
 			card.save()
 				.then((card) => {
-					res.json({ msg: 'Label successfully updated', card, label: updatedLabel });
+					res.json({ msg: 'Label successfully updated', card });
 				})
 				.catch((err) => {
 					console.error('Error while saving the card when updating label', err);

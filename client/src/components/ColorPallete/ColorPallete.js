@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { colors } from './colors.json';
-import { updateLabelById } from '../../api/cards'; 
 
 // styles
 import './ColorPallete.scss';
@@ -16,20 +15,23 @@ export default class ColorPallete extends Component {
 
 	componentDidMount = () => {
 		this.setState({
-			label: this.props.label,
+			label: this.props.label
 		});
 	}
-	componentDidUpdate = (prevProps) => {
-		const { label } = this.props;
-		if (label !== prevProps.label) {
-			this.setState({
-				label
-			});
-		}
+
+	closeModal = (e) => {
+		this.saveChanges();
+		this.props.onClose();
 	}
 
-	closeModal = () => {
-		this.props.onClose();
+	onSubmit = (e) => {
+		e.preventDefault();
+
+		this.closeModal();
+	}
+
+	deleteLabel = () => {
+		this.props.onDelete();
 	}
 
 	inputTitle = (e) => {
@@ -40,7 +42,7 @@ export default class ColorPallete extends Component {
 			}
 		});
 
-		this.editLabel({ ...this.state.label, title: e.target.value });
+		this.applyChanges({ ...this.state.label, title: e.target.value });
 	}
 
 	setColor = (color) => {
@@ -51,46 +53,36 @@ export default class ColorPallete extends Component {
 			}
 		});
 
-		this.updateLabel(null, { ...this.state.label, color });
+		this.applyChanges({ ...this.state.label, color });
 	}
 
-	editLabel = (label) => {
-		this.props.onEdit(label);
+	applyChanges = (label) => {
+		this.props.onChange(label);
 	}
 
-	updateLabel = (e, label) => {
-		if (e) e.preventDefault();
-		const { boardId, cardId } = this.props.data;
-
-
-		updateLabelById({ boardId, cardId, labelId: label._id, label })
-			.then(({ data }) => {
-				this.editLabel(data.label);
-			})
-			.catch((err) => {
-				console.error(err.response);
-			});
+	saveChanges = () => {
+		this.props.onSave(this.state.label);
 	}
 
-	deleteLabel = () => {
-		this.props.onDelete();
-	}
 
 	render() {
 		return (
 			this.props.isOpen ? (
-				<div className="color-pallete__modal">
+				<div className={`color-pallete__modal color-pallete__modal-${this.state.label._id}`}>
 					<div className="color-pallete__title">
-						<form onSubmit={(e) => { this.updateLabel(e, this.state.label); this.closeModal(); }}>
+						<form
+							onSubmit={this.onSubmit}
+						>
 							<input
-							onBlur={() => this.updateLabel(null, this.state.label)}
 							autoFocus
-							onChange={(e) => { this.inputTitle(e); }}
+							onChange={this.inputTitle}
 							value={this.state.label.title}
 							className="color-pallete__input"
 							type="text"/>
 						</form>
-						<div onClick={ () => { this.editLabel(this.state.label); this.updateLabel(null, this.state.label); this.closeModal(); } } className="color-pallete__close">
+						<div
+						onClick={ () => { this.closeModal(); } }
+						className="color-pallete__close">
 							<span></span>
 							<span></span>
 						</div>
@@ -101,7 +93,8 @@ export default class ColorPallete extends Component {
 							key={index}
 							style={ {background: color} }
 							className="color-pallete__color"
-							onClick={ () => { this.setColor(color); } }></div>
+							onClick={ () => this.setColor(color) }
+							></div>
 						))}
 					</div>
 					<ul className="color-pallete__actions">

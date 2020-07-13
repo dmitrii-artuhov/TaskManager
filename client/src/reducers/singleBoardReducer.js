@@ -12,7 +12,9 @@ import {
 	SINGLE_BOARD_DELETING,
 	SINGLE_BOARD_DELETED,
 
-	
+	//load list
+	BOARD_LIST_LOADING,
+	BOARD_LIST_LOADED,
 
 	// create list
 	BOARD_LIST_CREATING,
@@ -39,12 +41,17 @@ const initialState = {
 	isDeleting: false,
 	
 	// lists 
+	isListLoading: false,
+	listLoadingId: '',
+
 	isListCreating: false,
+
 	isListDeleting: false,
 	listDeletingId: '',
 
 	// cards
-	isCardCreating: false
+	isCardCreating: false,
+	cardCreatingListId: ''
 }
 
 export default (state = initialState, action) => {
@@ -100,7 +107,29 @@ export default (state = initialState, action) => {
 
 
 
+		// load a list
+		case BOARD_LIST_LOADING:
+			return {
+				...state,
+				isListLoading: true,
+				listLoadingId: action.payload.id
+			}
 
+		case BOARD_LIST_LOADED:
+			let updatedBoard = state.board;
+			updatedBoard.lists = updatedBoard.lists.map((list) => {
+				if (list._id === action.payload.list._id) {
+					list = action.payload.list;
+				}
+				return list;
+			});
+			
+			return {
+				...state,
+				board: {...updatedBoard},
+				isListLoading: false,
+				listLoadingId: ''
+			}
 
 		// create a new list
 		case BOARD_LIST_CREATING:
@@ -158,7 +187,8 @@ export default (state = initialState, action) => {
 		case BOARD_CARD_CREATING: 
 			return {
 				...state,
-				isCardCreating: true
+				isCardCreating: true,
+				cardCreatingListId: action.payload.listId
 			}
 
 		case BOARD_CARD_CREATED:
@@ -172,6 +202,7 @@ export default (state = initialState, action) => {
 			return {
 				...state,
 				isCardCreating: false,
+				cardCreatingListId: '',
 				board: { ...state.board, lists }
 			}
 

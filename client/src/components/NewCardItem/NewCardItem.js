@@ -33,7 +33,7 @@ export default class NewCardItem extends Component {
 				<div className="list__content">
 					<form onSubmit={ this.createCard }>
 						<input
-							onBlur={ this.unshiftCard }
+							// onBlur={ this.unshiftCard }
 							autoFocus
 							className="list__card-input"
 							type="text"

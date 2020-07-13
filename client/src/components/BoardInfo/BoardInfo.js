@@ -56,35 +56,3 @@ export default connect(
 	mapStateToProps,
 	{ createList }
 )(BoardInfo);
-
-
-/*
-<div className="board-info__content">
-	{ this.state.lists ? this.state.lists.map((list, index) => (
-		<List
-		key={ list._id }
-		list={ list }
-		boardId={ this.state.board._id } />
-	)) : '' }
-
-	<div className="boards__create board-info__input">
-		<div className="boards__input-wrapper">
-			<form onSubmit={ (e) => { e.preventDefault(); this.createList(); } }>
-				<input value={ this.state.newListTitle } onChange={(e) => {this.setState({ newListTitle: e.target.value })}} type="text" placeholder="Create new list..." />
-				{ this.state.isListCreating ? (
-					<div className="boards__input-spinner">
-						<Spinner animation="border" variant="white" role="status">
-							<span className="sr-only">Loading...</span>
-						</Spinner>
-					</div>
-				) : (
-					<img onClick={ this.createList } alt="img" src="/assets/imgs/plus-solid.png" />
-				) }
-			</form>
-		</div>
-	</div>
-</div>
-
-
-
-*/

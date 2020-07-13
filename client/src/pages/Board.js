@@ -7,10 +7,10 @@ import { Spinner } from 'react-bootstrap';
 import Navigation from '../components/Navigation/Navigation';
 import Sidebar from '../components/Sidebar/Sidebar';
 import BoardInfo from '../components/BoardInfo/BoardInfo';
-import Card from '../components/Card/Card';
+import FullviewCard from '../components/FullviewCard/FullviewCard';
 
 // styles
-import './styles.scss';
+import './styles.scss'; 
 
 
 class Board extends Component {
@@ -37,7 +37,7 @@ class Board extends Component {
 						<Fragment>
 							<Sidebar />
 							<BoardInfo board={ this.props.board } />
-							{ this.props.cardId && (<Card />) }
+							{ this.props.meta.cardId && (<FullviewCard meta={this.props.meta} />) }
 						</Fragment>
 					) : (
 						<Spinner animation="border" variant="primary" role="status">
@@ -53,8 +53,10 @@ class Board extends Component {
 const mapStateToProps = (state) => ({
 	isAuthenticated: state.auth.isAuthenticated,
 	isLoading: state.singleBoard.isLoading,
+	// board
 	board: state.singleBoard.board,
-	cardId: state.singleCard.cardId,
+	// selected fullview card
+	meta: state.singleCard.meta,
 });
 
 export default connect(

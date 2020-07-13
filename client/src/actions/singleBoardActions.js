@@ -1,5 +1,5 @@
 import { getBoardById, updateBoardById, deleteBoardById } from '../api/boards';
-import { createSingleList, deleteListById, updateListById } from '../api/lists';
+import { getListById, createSingleList, deleteListById, updateListById } from '../api/lists';
 import { createSingleCard } from '../api/cards';
 import {
 	// load board
@@ -14,6 +14,10 @@ import {
 	// delete board
 	SINGLE_BOARD_DELETING,
 	SINGLE_BOARD_DELETED,
+
+	// load list
+	BOARD_LIST_LOADING,
+	BOARD_LIST_LOADED,
 
 	// create list
 	BOARD_LIST_CREATING,
@@ -68,7 +72,7 @@ export const renameSingleBoard = ({ boardId, newTitle }) => (dispatch) => {
 
 	updateBoardById({ boardId, newTitle })
 		.catch((err) => {
-			console.error(err.response);	
+			console.error(err);	
 		});
 }
 
@@ -83,13 +87,36 @@ export const deletingBoard = ({ boardId }) => (dispatch) => {
 			dispatch({ type: SINGLE_BOARD_DELETED });
 		})
 		.catch((err) => {
-			console.error(err.response);
+			console.error(err);
 		});
 }
 
 
 
 // new list is being created
+export const loadList = (data) => (dispatch) => {
+	dispatch({
+		type: BOARD_LIST_LOADING,
+		payload: {
+			id: data.listId
+		}
+	});
+
+	getListById(data)
+		.then(({ data }) => {
+			dispatch({
+				type: BOARD_LIST_LOADED,
+				payload: {
+					list: data.list
+				}
+			});
+		})
+		.catch((err) => {
+			dispatch({ type: BOARD_LIST_FAIL });
+			console.error(err);
+		})
+}
+
 export const createList = (body) => (dispatch) => {
 	dispatch({ type: BOARD_LIST_CREATING });
 
@@ -164,7 +191,12 @@ export const renameList = ({ boardId, listId, newTitle }) => (dispatch) => {
 
 // create a new card
 export const createCard = (body) => (dispatch) => {
-	dispatch({ type: BOARD_CARD_CREATING });
+	dispatch({
+		type: BOARD_CARD_CREATING,
+		payload: {
+			listId: body.listId
+		}
+	});
 
 	createSingleCard({ body })
 		.then(({ data }) => {
@@ -176,6 +208,6 @@ export const createCard = (body) => (dispatch) => {
 			});
 		})
 		.catch((err) => {
-			console.error(err.response);
+			console.error(err);
 		});
 } 

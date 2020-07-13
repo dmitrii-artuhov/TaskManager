@@ -6,7 +6,6 @@ export const getCardById = ({ cardId, boardId }) => {
 }
 
 export const createSingleCard = ({ body }) => {
-	console.log(body);
 	return axios.post('/api/cards/create', body);
 }
 
@@ -32,7 +31,7 @@ export const deleteToDoById = ({ boardId, cardId, todoId }) => {
 }
 
 // labels
-export const addNewLabel = ({ boardId, cardId, label }) => {
+export const addLabel = ({ boardId, cardId, label }) => {
 	return axios.post(`/api/cards/${cardId}/labels/add`, { boardId, label });
 }
 

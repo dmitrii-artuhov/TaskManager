@@ -23,9 +23,14 @@ export default class CardItem extends Component {
 			return trimmed;
 	}
 
+	onClick = () => {
+		this.props.onClick(this.props.card._id);
+	}
+
 	render() {
 		return (
 			<li 
+			onClick={this.onClick}
 			style={ { background: this.props.card.status === 'COMPLETED' ? '#D6FFF2' : this.props.card.status === 'FAILED' ? '#FFE6DB' : '' } }
 			// onClick={ () => this.viewCard(card._id) }
 			className="list__card">

@@ -75,29 +75,11 @@
 		}
 	}
 
-	&__title {
-		margin-bottom: 50px;
-
-		h3 {
-			width: 100%;
-			margin: 0;
-			font-size: 20px;
-			font-weight: 600;
-		}
-	}
-
+	
 }
 
 
 .card__input {
-	width: 100%;
-	border: none;
-	outline: none;
-	border-bottom: 1px solid rgba(0, 0, 0, .1);
-	color: #4E4C4C;
-	font-size: 20px;
-	font-weight: 600;
-
 	&-todo {
 		transform: translateY(-3px);
 		background-color: transparent;

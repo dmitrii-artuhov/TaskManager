@@ -1,8 +1,9 @@
 import React, { Component, Fragment } from 'react';
-import { deleteToDoById, updateToDoById, addNewToDo } from '../../api/cards';
 
 // components
 import Skeleton from "react-loading-skeleton";
+import ChecklistItem from '../ChecklistItem/ChecklistItem';
+import NewChecklistItem from '../NewChecklistItem/NewChecklistItem';
 
 // styles
 import './Checklist.scss';
@@ -12,112 +13,57 @@ export default class Checklist extends Component {
 		super(props);
 
 		this.state = {
-			card: null,
-			// checklist
-			checklist: [],
-			newChecklistItem: {
-				title: '',
-				checked: false
-			},
 			isAddingNewChecklistItem: false
 		}
 	}
 
 	componentDidUpdate = (prevProps) => {
-		// card
-		const { card } = this.props;
-		
-		if (card !== prevProps.card) {
+		const { isTodoCreating } = this.props;
+		if (isTodoCreating !== prevProps.isTodoCreating) {
 			this.setState({
-				card,
-				checklist: card.checklist
+				isAddingNewChecklistItem: isTodoCreating
 			});
 		}
 	}
 
-	//--- ToDo
-	// start editing new todo
-	addNewToDo = () => {
+	// create new todo
+	createTodo = (todo) => {
+		this.props.onAdd(todo);
+	}
+
+	// toggle todo completed field 
+	toggleToDo = (todoId) => {
+		this.props.onUpdate(todoId);
+	}
+
+	// delete selected todo
+	deleteToDo = (todoId) => {	
+		this.props.onDelete(todoId);
+	}
+
+	// count completed dotos
+	calcCompletedToDos = () => {
+		if (!this.props.items || !this.props.items.length) {
+			return 0;
+		}
+
+		let count = 0;
+		this.props.items.map((todo) => todo.checked && count++);
+
+		const percentage = Math.floor(count / this.props.items.length * 100);
+		return percentage;
+	}
+
+	addItem = () => {
 		this.setState({
 			isAddingNewChecklistItem: true
 		});
 	}
 
-	// create new todo
-	createNewTodo = (e) => {
-		e.preventDefault();
-		if (!this.state.newChecklistItem.title) 
-			return;
-
-		const { boardId } = this.props;
-		const cardId = this.state.card._id;
-
-		addNewToDo({ cardId, boardId, todo: this.state.newChecklistItem })
-			.then(({ data }) => {
-				this.setState({
-					card: data.card,
-					checklist: data.card.checklist,
-					newChecklistItem: {
-						title: '',
-						checked: false
-					},
-					isAddingNewChecklistItem: false
-				});
-			})
-			.catch((err) => {
-				console.error(err.response);
-			});
-	}
-
-	// toggle todo completed field 
-	toggleToDo = (e, todoId) => {
-		if (e.target.closest('.fullview__checklist-cross')) {
-			return;
-		}
-
-		const { boardId } = this.props;
-		const cardId = this.state.card._id;
-	
-		updateToDoById({ cardId, boardId, todoId })
-			.then(({ data }) => {
-				this.setState({
-					card: data.card,
-					checklist: data.card.checklist
-				});
-			})
-			.catch((err) => {
-				console.error(err.response);
-			});
-	}
-
-	// delete selected todo
-	deleteToDo = (todoId) => {		
-		const { boardId } = this.props;
-		const cardId = this.state.card._id;
-
-		deleteToDoById({ boardId, cardId, todoId })
-			.then(({ data }) => {
-				this.setState({
-					card: data.card,
-					checklist: data.card.checklist
-				});
-			})
-			.catch((err) => {
-				console.error(err.response);
-			});
-	}
-
-	// count completed dotos
-	calcCompletedToDos = () => {
-		if (!this.state.card || !this.state.card.checklist.length) {
-			return 0;
-		}
-
-		let count = 0;
-		this.state.checklist.map((todo) => todo.checked && count++);
-
-		const percentage = Math.floor(count / this.state.card.checklist.length * 100);
-		return percentage;
+	removeItem = () => {
+		this.setState({
+			isAddingNewChecklistItem: false
+		});
 	}
 
 
@@ -142,52 +88,25 @@ export default class Checklist extends Component {
 					{/* ToDos */}
 					<div className="fullview__checklist-todo">
 						<ul>
-							{ !this.state.card ? <Skeleton count={4} /> : this.state.card.checklist.map((item, index) => (
-								<li 
-									key={index}
-									className={`fullview__checklist-item ${item.checked ?  'fullview__checklist-item--completed' : ''}`}
-									onClick={ (e) => this.toggleToDo(e, item._id) }>
-									<div className="fullview__checklist-text">
-										<div className="fullview__checklist-toggle">
-											<span></span>
-											<span></span>
-										</div>
-										<p>{ item.title }</p>
-									</div>
-									<div className="fullview__checklist-cross">
-										<img onClick={ () => this.deleteToDo(item._id) } src="/assets/imgs/todo-cross.svg" alt="todo-cross"/>
-									</div>
-								</li>
+							{ !this.props.items ? <Skeleton count={4} /> : this.props.items.map((todo) => (
+								<ChecklistItem
+								onToggle={this.toggleToDo}
+								onDelete={this.deleteToDo}
+								key={todo._id}
+								todo={todo}
+								/>
 							)) }
 							{/* New ToDo is being created */}
 							{ this.state.isAddingNewChecklistItem ? (
-								<li className="fullview__checklist-item">
-									<div className="fullview__checklist-text">
-										<div className="fullview__checklist-toggle">
-											<span></span>
-											<span></span>
-										</div>
-										<form style={ {width: '90%'} } onSubmit={ (e) => this.createNewTodo(e) }>
-											<input
-											onBlur={ () => this.setState({
-												isAddingNewChecklistItem: false,
-												newChecklistItem: { title: '' } }) }
-											autoFocus
-											className="card__input card__input-todo"
-											type="text"
-											value={ this.state.newChecklistItem.title }
-											onChange={ (e) => this.setState({
-												newChecklistItem: { title: e.target.value }
-											}) } />
-										</form>
-									</div>
-									<div className="fullview__checklist-cross">
-										<img src="/assets/imgs/todo-cross.svg" alt="todo-cross"/>
-									</div>
-								</li>
+								<NewChecklistItem
+								onBlur={this.removeItem}
+								onSubmit={this.createTodo}
+								/>
 							) : '' }
 						</ul>
-						<button onClick={ this.addNewToDo } className="fullview__checklist-add">
+						<button
+						onClick={this.addItem}
+						className="fullview__checklist-add">
 							Add
 						</button>
 					</div>
@@ -196,3 +115,22 @@ export default class Checklist extends Component {
 		)
 	}
 }
+
+/*
+TODO
+<li 
+	key={index}
+	className={`fullview__checklist-item ${todo.checked ?  'fullview__checklist-item--completed' : ''}`}
+	onClick={ (e) => this.toggleToDo(e, todo._id) }>
+	<div className="fullview__checklist-text">
+		<div className="fullview__checklist-toggle">
+			<span></span>
+			<span></span>
+		</div>
+		<p>{ todo.title }</p>
+	</div>
+	<div className="fullview__checklist-cross">
+		<img onClick={ () => this.deleteToDo(todo._id) } src="/assets/imgs/todo-cross.svg" alt="todo-cross"/>
+	</div>
+</li> 
+*/

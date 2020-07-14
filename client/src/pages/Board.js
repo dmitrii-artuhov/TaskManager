@@ -1,9 +1,9 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { loadSingleBoard } from '../actions/singleBoardActions';
+import Skeleton from "react-loading-skeleton";
 
 // components
-import { Spinner } from 'react-bootstrap';
 import Navigation from '../components/Navigation/Navigation';
 import Sidebar from '../components/Sidebar/Sidebar';
 import BoardInfo from '../components/BoardInfo/BoardInfo';
@@ -15,17 +15,9 @@ import './styles.scss';
 
 class Board extends Component {
 	componentDidMount = () => {
+		// watch this carefully
 		const { id } = this.props.match.params;
 		this.props.loadSingleBoard(id);
-	}
-
-	componentDidUpdate = (prevProps) => {
-		// updating isAuthenticated property
-		const { isAuthenticated } = this.props;
-		
-		if (isAuthenticated === false) {
-			this.props.history.push('/');
-		}
 	}
 
 	render() {
@@ -33,16 +25,24 @@ class Board extends Component {
 			<Fragment>
 				<Navigation link="/" linkTag="Boards" />
 				<div className="board-page-wrapper d-flex">
+					<Sidebar />
 					{ !this.props.isLoading ? (
 						<Fragment>
-							<Sidebar />
 							<BoardInfo board={ this.props.board } />
 							{ this.props.meta.cardId && (<FullviewCard meta={this.props.meta} />) }
 						</Fragment>
 					) : (
-						<Spinner animation="border" variant="primary" role="status">
-							<span className="sr-only">Loading...</span>
-						</Spinner>
+						<Fragment>
+							<div className="container board-info">
+								<div className="board-info__meta">
+									<Skeleton width={250} height={40} />
+								</div>
+								<div className="board-info__content">
+									<Skeleton width={280} height={400} />
+									<Skeleton width={280} height={400} />
+								</div>
+							</div>
+						</Fragment>
 					) }
 				</div>
 			</Fragment>
@@ -52,6 +52,7 @@ class Board extends Component {
 
 const mapStateToProps = (state) => ({
 	isAuthenticated: state.auth.isAuthenticated,
+	isRetrieving: state.auth.isRetrieving,
 	isLoading: state.singleBoard.isLoading,
 	// board
 	board: state.singleBoard.board,
@@ -64,3 +65,8 @@ export default connect(
 	{ loadSingleBoard }
 )(Board);
 
+//  { !this.props.isAuthenticated && !this.props.isRetrieving ? (
+// 		<Redirect to="/" />
+// 	) : ( 
+		
+// 	) }

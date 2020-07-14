@@ -1,34 +1,47 @@
 import { retrieveUser, registerUser, loginUser, logoutUser } from '../api/users';
 import { returnMessages, clearMessages } from './messagesActions';
 import { 
-	// GLOBAL_LOADING,
+	USER_RETRIEVING,
+	USER_RETRIEVED,
+
 	USER_LOADING,
-	USER_LOADED,
 
 	LOGIN_SUCCESS,
 	REGISTER_SUCCESS,
 	LOGOUT_SUCCESS,
 
-	AUTH_ERROR
+	AUTH_ERROR,
+
+	TOGGLE_AUTH_MODAL
 } from '../actions/types';
+
+// modal
+export const toggleModal = ({ isOpen, type }) => (dispatch) => {
+	// type = LOGIN, REGISTER
+	dispatch({ 
+		type: TOGGLE_AUTH_MODAL,
+		payload: {
+			isOpen,
+			type
+		}
+	});
+}
 
 // Load user if possible (when page refreshed)
 export const loadUser = () => (dispatch) => {
 	// user is loading
-	dispatch({ type: USER_LOADING });
-	// dispatch({ type: GLOBAL_LOADING });
+	dispatch({ type: USER_RETRIEVING });
 
 	// try to fetch user
 	retrieveUser()
 		.then((res) => {
 			// user is retrieved
 			dispatch({
-				type: USER_LOADED,
+				type: USER_RETRIEVED,
 				payload: {
 					user:	res.data.user
 				}
 			})
-			// console.log(res.data);
 		})
 		.catch((err) => {
 			// session is empty, no authenticated user exists
@@ -132,6 +145,9 @@ export const logout = () => (dispatch) => {
 	// asking passport.js for logout
 	logoutUser()
 		.then(() => {
+			// maybe should done the other way
+			window.location.replace('/'); 
+
 			dispatch(clearMessages());
 			dispatch({
 				type: LOGOUT_SUCCESS

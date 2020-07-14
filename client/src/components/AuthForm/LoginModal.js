@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 
 // redux
-import { login } from '../../actions/authActions';
+import { login, toggleModal } from '../../actions/authActions';
 import { returnMessages, clearMessages } from '../../actions/messagesActions';
 
 // components
@@ -33,6 +33,7 @@ class LoginModal extends Component {
 
 		this.state = {
 			isOpen: false,
+			type: '',
 			email: '',
 			password: '',
 			message: {
@@ -60,11 +61,21 @@ class LoginModal extends Component {
 				isLoading
 			});
 		}
+
+		// modal
+		const { modal } = this.props;
+		if (modal && modal !== prevProps.modal) {
+			this.setState({
+				isOpen: modal.isOpen,
+				type: modal.type 
+			});
+		}
 	}
 
 	toggleModal = () => {
-		this.setState({
-			isOpen: !this.state.isOpen
+		this.props.toggleModal({
+			isOpen: !this.state.isOpen,
+			type: 'LOGIN'
 		});
 		this.props.clearMessages();
 	}
@@ -115,7 +126,7 @@ class LoginModal extends Component {
 					Login
 				</NavLink>
 
-				<Modal className="custom-modal" isOpen={this.state.isOpen} toggle={this.toggleModal}>
+				<Modal className="custom-modal" isOpen={this.state.type === 'LOGIN' && this.state.isOpen} toggle={this.toggleModal}>
 					<ModalHeader
 					className="custom-modal__header"
 					close={closeBtn}
@@ -154,11 +165,12 @@ class LoginModal extends Component {
 
 const mapStateToProps = (state) => ({
 	message: state.message,
-	isLoading: state.auth.isLoading
+	isLoading: state.auth.isLoading,
+	modal: state.auth.modal
 });
 
 export default connect(
 	mapStateToProps,
-	{ login, clearMessages, returnMessages }
+	{ login, clearMessages, returnMessages, toggleModal }
 )(LoginModal);
 

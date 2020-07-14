@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
 // models
 const Board = require('../../models/Board');
 const User = require('../../models/User');
@@ -196,11 +197,12 @@ router.get('/find/:id', auth.ensureAuthentication, isBoardParticipant.checkBoard
 		.populate('participants.user')
 		.exec((err, board) => {
 			if (err) {
-				console.error(err);
+				console.error('Error while finding the board', err);
 				return res.status(500).json({ msg: 'Internal server error' });
 			}
 			res.json({ board });
-		});
+		});	
+
 });
 
 module.exports = router;

@@ -6,6 +6,11 @@ module.exports = {
 		if (!boardId) boardId = req.params.id; // for boards.js routes
 		const { userId } = req; // extracted from passport (check auth.js middleware)
 
+		const checkForHexRegExp = new RegExp("^[0-9a-fA-F]{24}$");
+		if (!checkForHexRegExp.test(boardId)) {
+			return res.status(400).json({ msg: 'Board id is invalid' });
+		}
+
 		Board.findOne({ _id: boardId })
 			.then((board) => {
 				if (!board) {

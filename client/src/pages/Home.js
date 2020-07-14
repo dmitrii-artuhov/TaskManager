@@ -1,7 +1,9 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
+import { toggleModal } from '../actions/authActions';
 
 // components
+import FullscreenLoader from '../components/FullscreenLoader/FullscreenLoader';
 import Navigation from '../components/Navigation/Navigation';
 import Intro from '../components/Intro/Intro';
 import Boards from '../components/Boards/Boards';
@@ -29,23 +31,36 @@ class Home extends Component {
 				isAuthenticated
 			});
 		}
+
 	}
 
 	render() {
 		return (
 			<Fragment>
-				<Navigation link="/account" linkTag="Profile" />
-				{ !this.state.isAuthenticated ? <Intro /> : <Boards /> }
+				<FullscreenLoader isLoading={this.props.isRetrieving}>
+						<Navigation link="/account" linkTag="Profile" />
+						{ !this.state.isAuthenticated ? <Intro toggleModal={this.props.toggleModal} /> : <Boards /> }
+				</FullscreenLoader>
 			</Fragment>
 		);
 	}
 }
 
 const mapStateToProps = (state) => ({
-	isAuthenticated: state.auth.isAuthenticated
+	isAuthenticated: state.auth.isAuthenticated,
+	isRetrieving: state.auth.isRetrieving
 });
 
 export default connect(
-	mapStateToProps
+	mapStateToProps,
+	{ toggleModal }
 )(Home);
 
+/* { this.props.isLoading ? (
+	<FullscreenLoader />
+) : (
+	<Fragment>
+		<Navigation link="/account" linkTag="Profile" />
+		{ !this.state.isAuthenticated ? <Intro /> : <Boards /> }
+	</Fragment>
+) } */

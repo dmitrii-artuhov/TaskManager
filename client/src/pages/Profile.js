@@ -6,15 +6,6 @@ import Navigation from '../components/Navigation/Navigation';
 import ProfileCard from '../components/ProfileCard/ProfileCard';
 
 class Profile extends Component {
-	componentDidUpdate = (prevProps) => {
-		// updating isAuthenticated property
-		const { isAuthenticated } = this.props;
-		
-		if (isAuthenticated === false) {
-			this.props.history.push('/');
-		}
-	}
-
 	render() {
 		return (
 			<Fragment>
@@ -26,10 +17,19 @@ class Profile extends Component {
 }
 
 const mapStateToProps = (state) => ({
-	isAuthenticated: state.auth.isAuthenticated
+	isAuthenticated: state.auth.isAuthenticated,
+	isRetrieving: state.auth.isRetrieving
 });
 
 export default connect(
 	mapStateToProps
 )(Profile);
 
+/*
+{ !this.props.isAuthenticated && !this.props.isRetrieving ? (
+	<Redirect to="/" />
+) : (
+
+) }
+
+*/

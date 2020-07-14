@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 
 // components
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 
 // redux
 import { logout } from '../../actions/authActions';
@@ -15,9 +15,12 @@ class Logout extends Component {
 	render() {
 		return (
 			<Fragment>
-				<Link to="/" onClick={this.logout} className="navigation__button nav-link">
+				<a href="" onClick={this.logout} className="navigation__button nav-link">
 					Logout
-				</Link>
+				</a>
+				{/* <Link to="/" onClick={this.logout} className="navigation__button nav-link">
+					Logout
+				</Link> */}
 			</Fragment>
 		);
 	}

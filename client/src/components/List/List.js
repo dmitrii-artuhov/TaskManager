@@ -155,11 +155,19 @@ class List extends Component {
 						<li onClick={ this.deleteList }>Delete</li>
 					</ActionsModal>
 					
-					<CardsWrapper
-					isCreatingCard={this.state.isCreatingCard}
-					onCreate={this.createCard}
-					onView={(cardId) => this.viewCard(cardId)}
-					items={this.props.list.cards} />
+					{ !this.props.list.cards.length
+					&& !this.state.isCreatingCard ? (
+						<Fragment>
+							<img style={{ marginTop: '30px' }} src="/assets/imgs/empty.svg" alt="empty"/>
+							<p style={{ textAlign: 'center', marginTop: '15px', fontSize: '12px' }}>No Data</p>
+						</Fragment>
+					) : (
+						<CardsWrapper
+						isCreatingCard={this.state.isCreatingCard}
+						onCreate={this.createCard}
+						onView={(cardId) => this.viewCard(cardId)}
+						items={this.props.list.cards} />
+					) }
 				
 				</div>
 			</Fragment>

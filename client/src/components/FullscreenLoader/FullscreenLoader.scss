@@ -1,18 +1,6 @@
-@import '../variables.scss';
+@import '../../variables.scss';
 
-// Board page
-@media all and (max-width: 768px) {
-	.board-page-wrapper {
-		min-height: calc(100vh - 56px);
-		position: relative;
-		flex-direction: column-reverse;
-		justify-content: space-between;
-	}
-}
-
-
-// 404 Not Found
-.not-found {
+.fullscreen-loader {
 	$pixels: 15px;
 
 	@keyframes float {
@@ -26,30 +14,11 @@
 	}
 
 	width: 100%;
-	height: calc(100vh - 56px);
+	height: 100vh;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-
-	
-	&__button {
-		box-sizing: border-box;
-		padding: 10px 30px;
-		border-radius: 5px;
-		text-align: center;
-		background-color: $dark-main-color;
-		display: block;
-		color: #fff;
-		font-size: $medium-font-size;
-		font-weight: 500;
-		transform: translateY(70px);
-
-		&:hover {
-			color: #fff;
-			text-decoration: none;
-		}
-	}
 
 	&__wrapper {
 		display: flex;
@@ -59,8 +28,9 @@
 		box-sizing: border-box;
 		position: relative;
 
-		img.notfound {
+		img.loading {
 			width: 90%;
+			max-width: 400px;
 		}
 
 		img {
@@ -91,6 +61,12 @@
 			max-width: 210px;
 			width: 40%;
 		}
+	}
+
+	&__spinner {
+		margin-top: 40px;
+		border-color: $high-light-supporting-color !important;
+    border-right-color: transparent !important;
 	}
 }
 

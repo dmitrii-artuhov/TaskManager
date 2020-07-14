@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 
 // actions
-import { register } from '../../actions/authActions';
+import { toggleModal, register } from '../../actions/authActions';
 import { returnMessages, clearMessages } from '../../actions/messagesActions';
 
 // components
@@ -63,13 +63,26 @@ class RegisterModal extends Component {
 				isLoading
 			});
 		}
+
+		// modal
+		const { modal } = this.props;
+		if (modal && modal !== prevProps.modal) {
+			this.setState({
+				isOpen: modal.isOpen,
+				type: modal.type 
+			});
+		}
 	}
 
 	toggleModal = () => {
-		this.props.clearMessages();
-		this.setState({
-			isOpen: !this.state.isOpen
+		this.props.toggleModal({
+			isOpen: !this.state.isOpen,
+			type: 'REGISTER'
 		});
+		this.props.clearMessages();
+		// this.setState({
+		// 	isOpen: !this.state.isOpen
+		// });
 	}
 
 	inputField = (e) => {
@@ -119,7 +132,7 @@ class RegisterModal extends Component {
 				<NavLink onClick={this.toggleModal} className="navigation__button">
 					Register
 				</NavLink>
-				<Modal className="custom-modal" isOpen={this.state.isOpen} toggle={this.toggleModal}>
+				<Modal className="custom-modal" isOpen={this.state.type === 'REGISTER' && this.state.isOpen} toggle={this.toggleModal}>
 					<ModalHeader
 					className="custom-modal__header"
 					toggle={this.toggleModal}
@@ -164,10 +177,11 @@ class RegisterModal extends Component {
 
 const mapStateToProps = (state) => ({
 	message: state.message,
-	isLoading: state.auth.isLoading
+	isLoading: state.auth.isLoading,
+	modal: state.auth.modal
 });
 
 export default connect(
 	mapStateToProps,
-	{ register, clearMessages, returnMessages }
+	{ register, clearMessages, returnMessages, toggleModal }
 )(RegisterModal);

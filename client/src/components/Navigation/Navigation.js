@@ -2,10 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 
 // components
-import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem } from 'reactstrap';
-import {
-	Spinner
-} from 'react-bootstrap';
+import { Collapse, Navbar, NavbarToggler, Nav, NavItem } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
 import LoginModal from '../AuthForm/LoginModal';
@@ -85,14 +82,12 @@ class Navigation extends Component {
 		return (
 			<Fragment>
 				<Navbar className="navigation" color="dark" dark expand="sm">
-					<NavbarBrand href="/" className="mr-auto">TaskManager</NavbarBrand>
+					<Link to="/" className="mr-auto">TaskManager</Link>
 
 					<NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
 					<Collapse isOpen={!this.state.isCollapsed} navbar>
 						<Nav navbar className="ml-auto">
-							{ this.state.isAuthenticated === null ? 
-								<Spinner as="span" size="sm" animation="border" variant="info" />
-							: this.state.isAuthenticated ? (
+							{ this.state.isAuthenticated ? (
 								authLinks
 							) : guestLinks }
 						</Nav>
@@ -105,7 +100,7 @@ class Navigation extends Component {
 
 const mapStateToProps = (state) => ({
 	isAuthenticated: state.auth.isAuthenticated,
-	user: state.auth.user
+	user: state.auth.user,
 });
 
 export default connect(

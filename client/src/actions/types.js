@@ -1,4 +1,7 @@
 // user
+export const USER_RETRIEVING = 'USER_RETRIEVING';
+export const USER_RETRIEVED = 'USER_RETRIEVED';
+
 export const USER_LOADING = 'USER_LOADING';
 export const USER_LOADED = 'USER_LOADED';
 
@@ -7,6 +10,8 @@ export const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 
 export const AUTH_ERROR = 'AUTH_ERROR';
+export const TOGGLE_AUTH_MODAL = 'TOGGLE_AUTH_MODAL';
+
 
 // messages
 export const GET_MESSAGES = 'GET_MESSAGES';

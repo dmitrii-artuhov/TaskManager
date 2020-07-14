@@ -1,5 +1,7 @@
 import { 
-	// GLOBAL_LOADING,
+	USER_RETRIEVING,
+	USER_RETRIEVED,
+
 	USER_LOADING,
 	USER_LOADED,
 
@@ -7,23 +9,47 @@ import {
 	REGISTER_SUCCESS,
 	LOGOUT_SUCCESS,
 
-	AUTH_ERROR
+	AUTH_ERROR,
+
+	TOGGLE_AUTH_MODAL
 } from '../actions/types';
 
 const initialState = {
 	isAuthenticated: null,
 	isLoading: false,
-	// globalLoading: false,
-	user: null
+	isRetrieving: false,
+	user: null,
+	modal: {
+		isOpen: false,
+		type: null // LOGIN, REGISTER
+	}
 }
 
 export default (state = initialState, action) => {
 	switch (action.type) {
-		// case GLOBAL_LOADING:
-		// 	return {
-		// 		...state,
-		// 		globalLoading: true
-		// 	}
+		case TOGGLE_AUTH_MODAL:
+			return {
+				...state,
+				modal: {
+					isOpen: action.payload.isOpen,
+					type: action.payload.type
+				}
+			}
+
+		case USER_RETRIEVING:
+			return {
+				...state,
+				isRetrieving: true
+			}
+
+		case USER_RETRIEVED:
+			return {
+				...state,
+				isAuthenticated: true,
+				isRetrieving: false,
+				user: action.payload.user
+			}
+
 		case USER_LOADING:
 			return {
 				...state,
@@ -34,7 +60,6 @@ export default (state = initialState, action) => {
 			return {
 				isAuthenticated: true,
 				isLoading: false,
-				// globalLoading: false,
 				user: action.payload.user
 			}
 		case REGISTER_SUCCESS:
@@ -47,7 +72,7 @@ export default (state = initialState, action) => {
 			return {
 				isAuthenticated: false,
 				isLoading: false,
-				// globalLoading: false,
+				isRetrieving: false,
 				user: null
 			}
 		

@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Spinner } from 'react-bootstrap';
+import Skeleton from "react-loading-skeleton";
 import BoardsWrapper from '../BoardsWrapper/BoardsWrapper';
 
 // redux
@@ -14,7 +14,6 @@ redux: get all boards,
 isLoading: Spinner,
 ownBoards: [],
 sharedBoards: []
-
 */
 
 class Boards extends Component {
@@ -61,9 +60,23 @@ class Boards extends Component {
 			<Fragment>
 				<div className="boards-container">
 					{ this.state.isLoading ? (
-						<Spinner className="mt-2 ml-2" animation="border" variant="primary" role="status">
-							<span className="sr-only">Loading...</span>
-						</Spinner>
+						<Fragment>
+							<div className="boards__loader">
+								<Skeleton className="boards__loader-title" height={30} width={280} />
+								<div className="boards__loader-feed">
+									<Skeleton className="boards__loader-board" height={200} />
+									<Skeleton className="boards__loader-board" height={200} />
+								</div>
+							</div>
+							<div className="boards__loader">
+								<Skeleton className="boards__loader-title" height={30} width={280} />
+								<div className="boards__loader-feed">
+									<Skeleton className="boards__loader-board" height={200} />
+									<Skeleton className="boards__loader-board" height={200} />
+								</div>
+							</div>
+						</Fragment>
+						
 					) : (
 						<Fragment>
 							<BoardsWrapper

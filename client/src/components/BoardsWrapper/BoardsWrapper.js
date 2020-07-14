@@ -8,11 +8,11 @@ import './BoardWrapper.scss';
 /*
 props:
 	items: [{board1}, {board2}],
-	title: 'Owning',
+	title: 'Owning | Shared',
 	isLoading: optional,
 	type: {
-		type: String,
-		value: 'OWNED', 'SHARED'
+		type: ENUM,
+		value: ['OWNED', 'SHARED']
 	},
 	createBoard: function() {}
 */
@@ -49,22 +49,6 @@ class BoardsWrapper extends Component {
 							placeholder="Create new board..."
 							onSubmit={this.createBoard}
 							isLoading={this.props.isLoading} />
-							// <div className="boards__create">
-							// 	<div className="boards__input-wrapper">
-							// 		<form onSubmit={ this.createBoard }>
-							// 			<input value={this.state.newBoardTitle} onChange={ this.inputTitle } type="text" placeholder="Create new board..." />
-							// 			{ this.props.isLoading ? (
-							// 				<div className="boards__input-spinner">
-							// 					<Spinner animation="border" variant="white" role="status">
-							// 						<span className="sr-only">Loading...</span>
-							// 					</Spinner>
-							// 				</div>
-							// 			) : (
-							// 				<img onClick={ this.createBoard } alt="img" src="/assets/imgs/plus-solid.png" />
-							// 			) }
-							// 		</form>
-							// 	</div>
-							// </div>
 						) }
 					</div>
 				</div>

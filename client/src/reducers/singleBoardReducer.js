@@ -118,7 +118,7 @@ export default (state = initialState, action) => {
 		case BOARD_LIST_LOADED:
 			let updatedBoard = state.board;
 			updatedBoard.lists = updatedBoard.lists.map((list) => {
-				if (list._id === action.payload.list._id) {
+				if (list && list._id === action.payload.list._id) {
 					list = action.payload.list;
 				}
 				return list;

@@ -13,7 +13,8 @@ import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import Profile from './pages/Profile';
 import Board from './pages/Board';
-
+// protected routes
+import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 
 // styles
 import './style.scss';
@@ -21,7 +22,8 @@ import './style.scss';
 
 
 class App extends Component {
-  componentDidMount = () => {
+  // use this carefully
+  componentWillMount = () => {
     store.dispatch(loadUser());
   }
 
@@ -31,8 +33,8 @@ class App extends Component {
         <Router>
           <Switch>
             <Route exact path="/" component={ Home } />
-            <Route exact path="/account" component={ Profile } />
-            <Route exact path="/board/:id" component={ Board } />
+            <ProtectedRoute exact path="/account" component={ Profile } />
+            <ProtectedRoute exact path="/board/:id" component={ Board } />
             <Route path="*" component={ NotFound } />
           </Switch>
         </Router>

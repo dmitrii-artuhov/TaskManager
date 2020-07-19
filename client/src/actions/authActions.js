@@ -146,7 +146,7 @@ export const logout = () => (dispatch) => {
 	logoutUser()
 		.then(() => {
 			// maybe should done the other way
-			window.location.replace('/'); 
+			// window.location.replace('/'); 
 
 			dispatch(clearMessages());
 			dispatch({

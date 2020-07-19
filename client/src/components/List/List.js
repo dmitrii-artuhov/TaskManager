@@ -1,12 +1,24 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 // redux
-import { loadList, deleteList, renameList, createCard } from '../../actions/singleBoardActions';
+import {
+	// Drag and Drop
+	switchCards,
+	relocatedCards,
+
+	loadList,
+	deleteList,
+	renameList,
+	createCard
+} from '../../actions/singleBoardActions';
 import { selectCardById } from '../../actions/singleCardActions';
 
 // components
 import ActionsModal from '../ActionsModal/ActionsModal';
 import CardsWrapper from '../CardsWrapper/CardsWrapper';
+import { CSSTransition } from 'react-transition-group';
+// Drag and Drop
+import DropWrapper from '../DropWrapper/DropWrapper';
 
 // styles
 import './List.scss';
@@ -23,6 +35,9 @@ class List extends Component {
 			listTitle: this.props.list.title,
 			// cards
 			isCreatingCard: false,
+			// Drag and Drop
+			dragEl: null,
+			items: this.props.list.cards
 		}
 	}
 
@@ -49,6 +64,12 @@ class List extends Component {
 		if (this.props.selectedCard !== prevProps.selectedCard && !this.props.selectedCard.meta.listId) {
 			const { boardId, list } = this.props;
 			this.props.loadList({ boardId, listId: list._id });
+		}
+
+		if (list.cards !== prevProps.list.cards) {
+			this.setState({
+				items: list.cards
+			});
 		}
 	}
 
@@ -114,6 +135,59 @@ class List extends Component {
 		});
 	}
 
+	// Drag and Drop
+	// save moveItem action result
+	dragAndDrop = ({ type, cardItem = {} }) => {
+		if (type === 'SWITCH') {
+			this.props.switchCards({
+				boardId: this.props.boardId,
+				listId: this.props.list._id,
+				lists: this.props.lists,
+				cards: this.state.items
+			});
+		} else if (type === 'RELOCATE') {
+			this.props.relocatedCards({
+				boardId: this.props.boardId,
+				listId: this.props.list._id,
+				removeListId: cardItem.listId,
+				lists: this.props.lists,
+				cardItem
+			});
+		}
+	}
+
+	setDragElement = (dragEl) => {
+		this.setState({
+			dragEl
+		});
+	}
+
+	// change list
+	onDrop = ({ cardItem }) => {
+		// determine if the card is on top of the same list it used to be
+		if (cardItem.listId === this.props.list._id) return;
+		this.dragAndDrop({ type: 'RELOCATE', cardItem });
+	}
+
+	// change placing inside a list
+	moveItem = (el) => {
+		// calc current 
+		if (!this.state.dragEl) return;
+
+		const itemIndex = this.state.items.findIndex((item) => item._id === this.state.dragEl._id);
+		if (itemIndex === -1) return;
+
+		const hoverIndex = this.state.items.findIndex((item) => item._id === el._id);
+
+		// switch places
+		const updatedItems = [...this.state.items];
+		updatedItems.splice(itemIndex, 1);
+		updatedItems.splice(hoverIndex, 0, this.state.dragEl);	
+		this.setState({
+			items: [...updatedItems]
+		});
+	}
+
 	render() {
 		return (
 			<Fragment>
@@ -141,34 +215,49 @@ class List extends Component {
 							<span></span>
 						</div>
 					</div>
-
-					<ActionsModal
-						onClose={ this.toggleActionModal }
-						isOpen={ this.state.isActionsOpen }
-						listId={ this.props.list._id }
+						
+					<CSSTransition
+						in={this.state.isActionsOpen}
+						timeout={200}
+						classNames="list_action-animate"
+						unmountOnExit
 					>
-						<li onClick={ () => {
-							this.setState({ isRenamingList: true });
-							this.toggleActionModal();
-							}}>Rename</li>
-						<li onClick={ this.addCardToList }>Add card</li>
-						<li onClick={ this.deleteList }>Delete</li>
-					</ActionsModal>
-					
-					{ !this.props.list.cards.length
-					&& !this.state.isCreatingCard ? (
-						<Fragment>
-							<img style={{ marginTop: '30px' }} src="/assets/imgs/empty.svg" alt="empty"/>
-							<p style={{ textAlign: 'center', marginTop: '15px', fontSize: '12px' }}>No Data</p>
-						</Fragment>
-					) : (
-						<CardsWrapper
-						isCreatingCard={this.state.isCreatingCard}
-						onCreate={this.createCard}
-						onView={(cardId) => this.viewCard(cardId)}
-						items={this.props.list.cards} />
-					) }
-				
+						<ActionsModal
+							onClose={ this.toggleActionModal }
+							isOpen={ this.state.isActionsOpen }
+							listId={ this.props.list._id }
+						>
+							<li onClick={ () => {
+								this.setState({ isRenamingList: true });
+								this.toggleActionModal();
+								}}>Rename</li>
+							<li onClick={ this.addCardToList }>Add card</li>
+							<li onClick={ this.deleteList }>Delete</li>
+						</ActionsModal>
+					</CSSTransition>
+
+					<DropWrapper onDrop={this.onDrop}>
+						{ !this.state.items.length
+						&& !this.state.isCreatingCard ? (
+							<div style={{width: '100%', display: 'flex', flexDirection: 'column'}}>
+								<img style={{ marginTop: '30px', height: '100px' }} src="/assets/imgs/empty.svg" alt="empty"/>
+								<p style={{ textAlign: 'center', marginTop: '15px', fontSize: '12px' }}>No Data</p>
+							</div>
+						) : (
+							<CardsWrapper
+							// Drag and Drop
+							dragAndDrop={this.dragAndDrop}
+							moveItem={this.moveItem}
+							setDragElement={this.setDragElement}
+							// other
+							listId={this.props.list._id}
+							isCreatingCard={this.state.isCreatingCard}
+							onCreate={this.createCard}
+							onView={(cardId) => this.viewCard(cardId)}
+							items={this.state.items}
+							/>
+						) }
+					</DropWrapper>
 				</div>
 			</Fragment>
 		);
@@ -176,8 +265,9 @@ class List extends Component {
 }
 
 const mapStateToProps = (state) => ({
+
 	// lists
-	lists: state.singleBoard.lists,
+	lists: state.singleBoard.board.lists,
 	isListDeleting: state.singleBoard.isListDeleting,
 	listDeletingId: state.singleBoard.listDeletingId,
 	// cards
@@ -188,5 +278,15 @@ const mapStateToProps = (state) => ({
 
 export default connect(
 	mapStateToProps,
-	{ loadList, deleteList, renameList, createCard, selectCardById }
+	{ 
+		// Drag and Drop
+		switchCards,
+		relocatedCards,
+
+		loadList,
+		deleteList,
+		renameList,
+		createCard,
+		selectCardById
+	}
 )(List);

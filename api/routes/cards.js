@@ -48,7 +48,8 @@ router.post('/create', auth.ensureAuthentication, isBoardParticipant.checkBoardP
 			}
 
 			const newCard = new Card({
-				title
+				title,
+				listId: list._id
 			});
 
 			// saving created card

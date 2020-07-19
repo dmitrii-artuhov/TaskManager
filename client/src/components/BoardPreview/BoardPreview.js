@@ -10,6 +10,14 @@ props:
 */
 
 export default class BoardPreview extends Component {
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			patternIndex: 0
+		}
+	}
+
 	getBoardOwner = (participants) => {
 		let owner = null;
 
@@ -24,7 +32,10 @@ export default class BoardPreview extends Component {
 
 	render() {
 		return (
-			<Link to={`/board/${this.props.board._id}`} className="boards__board">
+			<Link
+				to={`/board/${this.props.board._id}`}
+				className="boards__board"
+			>
 				<div className="boards__info">
 					<p>{ this.props.board.title }</p>
 					<ul>
@@ -48,7 +59,13 @@ export default class BoardPreview extends Component {
 						)) }
 					</ul>
 				</div>
-				<img src="/assets/imgs/bg2.png" alt="bg" />
+			
+				<div className="boards__overlay"></div>
+				<img
+					style={{zIndex: -2}}
+					src={`/assets/backgrounds/${this.props.board.backgroundURL}`}
+					alt="bg"
+				/>
 			</Link>
 		);
 	}

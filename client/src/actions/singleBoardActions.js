@@ -1,5 +1,18 @@
-import { getBoardById, updateBoardById, deleteBoardById } from '../api/boards';
-import { getListById, createSingleList, deleteListById, updateListById } from '../api/lists';
+import {
+	getBoardById,
+	updateBoardById,
+	deleteBoardById
+} from '../api/boards';
+
+import {
+	getListById,
+	createSingleList,
+	deleteListById,
+	updateListById,
+	// Drag and Drop
+	switchCard,
+	relocateCard
+} from '../api/lists';
 import { createSingleCard } from '../api/cards';
 import {
 	// load board
@@ -33,7 +46,11 @@ import {
 
 	// cards
 	BOARD_CARD_CREATING,
-	BOARD_CARD_CREATED
+	BOARD_CARD_CREATED,
+
+	// Drag and Drop
+	BOARD_CARD_DRAG_DROP_SWITCH,
+	BOARD_CARD_DRAG_DROP_RELOCATE
 } from './types';
 
 // single board is loading
@@ -52,11 +69,12 @@ export const loadSingleBoard = (boardId) => (dispatch) => {
 		})
 		.catch((err) => {
 			console.error(err);
-			window.location.replace('/');
+			// window.location.replace('/');
 			
 			dispatch({ type: SINGLE_BOARD_FAIL });
 		});
 }
+
 // rename board
 export const startRenamingSingleBoard = () => (dispatch) => {
 	dispatch({ type: SINGLE_BOARD_RENAMING });
@@ -90,8 +108,6 @@ export const deletingBoard = ({ boardId }) => (dispatch) => {
 			console.error(err);
 		});
 }
-
-
 
 // new list is being created
 export const loadList = (data) => (dispatch) => {
@@ -188,7 +204,6 @@ export const renameList = ({ boardId, listId, newTitle }) => (dispatch) => {
 
 }
 
-
 // create a new card
 export const createCard = (body) => (dispatch) => {
 	dispatch({
@@ -211,3 +226,66 @@ export const createCard = (body) => (dispatch) => {
 			console.error(err);
 		});
 } 
+
+// Drag and Drop
+// switch cards
+export const switchCards = ({ boardId, listId, lists, cards }) => (dispatch) => {
+	const afterSwitchLists = lists.map((list) => {
+		if (list._id === listId) {
+			list.cards = [...cards];
+		}
+		return list;
+	});
+
+	dispatch({
+		type: BOARD_CARD_DRAG_DROP_SWITCH,
+		payload: {
+			lists: afterSwitchLists
+		}
+	});
+
+	// axios
+	switchCard({
+		boardId,
+		listId,
+		cards
+	})
+		.catch((err) => {
+			console.error(err);
+		});
+}
+
+export const relocatedCards = ({ boardId, lists, removeListId, listId, cardItem }) => (dispatch) => {
+	const afterRelocateLists = lists.map((list) => {
+		// remove from the old spot
+		if (list._id === removeListId) {
+			const newCards = list.cards.filter((card) => card._id !== cardItem._id);
+			list = { ...list, cards: [...newCards] };
+		}
+		// add to the new spot
+		if (list._id === listId) {
+			const newCardItem = { ...cardItem, listId }
+			list = { ...list, cards: [...list.cards, newCardItem] }
+		}
+	
+		return list;
+	});
+
+	dispatch({
+		type: BOARD_CARD_DRAG_DROP_RELOCATE,
+		payload: {
+			lists: afterRelocateLists
+		}
+	});
+
+	// axios
+	relocateCard({
+		boardId,
+		from: removeListId,
+		to: listId,
+		cardId: cardItem._id
+	})
+		.catch((err) => {
+			console.error(err);
+		});
+}

@@ -35,15 +35,24 @@ class Board extends Component {
 						<Fragment>
 							<div className="container board-info">
 								<div className="board-info__meta">
-									<Skeleton width={250} height={40} />
+									<Skeleton className="faded-skeleton" width={250} height={40} />
 								</div>
 								<div className="board-info__content">
-									<Skeleton width={280} height={400} />
-									<Skeleton width={280} height={400} />
+									<Skeleton className="faded-skeleton" width={280} height={400} />
+									<Skeleton className="faded-skeleton" width={280} height={400} />
 								</div>
 							</div>
 						</Fragment>
 					) }
+
+					<div className="board-page-wrapper__background">
+						<div className="board-page-wrapper__background-fade"></div>
+						{ !this.props.isLoading && this.props.board.backgroundURL ? (
+							<img src={`/assets/backgrounds/${this.props.board.backgroundURL}`} alt="bg"/>
+						) : (
+							<div className="board-page-wrapper__placeholder"></div>
+						)}
+					</div>
 				</div>
 			</Fragment>
 		);

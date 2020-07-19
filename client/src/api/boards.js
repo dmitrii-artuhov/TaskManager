@@ -5,8 +5,8 @@ export const getAllBoards = () => {
 	return axios.get('/api/boards/get');
 }
 
-export const createSingleBoard = ({ title }) => {
-	return axios.post('/api/boards/create', { title });
+export const createSingleBoard = ({ title, backgroundURL }) => {
+	return axios.post('/api/boards/create', { title, backgroundURL });
 }
 
 export const getBoardById = ({ boardId }) => {

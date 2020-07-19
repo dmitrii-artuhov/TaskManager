@@ -42,12 +42,13 @@ router.get('/get', auth.ensureAuthentication, (req, res) => {
 
 // create a board (for authenticated users)
 router.post('/create', auth.ensureAuthentication, (req, res) => {
-	const { title } = req.body;
+	const { title, backgroundURL } = req.body;
 	const { userId } = req;
 	if (!title || !userId) return res.status(400).json({ msg: 'Provide all fields' });
-	
+
 	const newBoard = new Board({
 		title,
+		backgroundURL,
 		participants: [ { role: 'admin', user: userId } ]
 	});
 

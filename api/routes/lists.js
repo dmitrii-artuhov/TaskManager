@@ -206,4 +206,77 @@ router.put('/update/:id', auth.ensureAuthentication, isBoardParticipant.checkBoa
 		});
 });
 
+// used for drag and drop functionality on the front end
+router.post('/switch', auth.ensureAuthentication, isBoardParticipant.checkBoardParticipant, (req, res) => {
+	const { boardId, listId, cards } = req.body;
+
+	List.findById(listId)
+		.then((list) => {
+			list.cards = cards.map((item) => item._id);
+			list.save()
+				.then(() => {
+					res.json({ msg: 'Cards successfully switched' });
+				})
+				.catch((err) => {
+					console.error(err);
+					res.status(500).json({ msg: 'Internal server error' });
+				});
+		})
+		.catch((err) => {
+			console.error(err);
+			res.status(500).json({ msg: 'Internal server error' });
+		});
+});
+
+router.post('/relocate', auth.ensureAuthentication, isBoardParticipant.checkBoardParticipant, (req, res) => {
+	const { boardId, from, to, cardId } = req.body;
+
+	List.findById(from)
+		.then((fromList) => {
+			fromList.cards = fromList.cards.filter((id) => id != cardId);
+			fromList.save()
+				.then(() => {
+					List.findById(to)
+						.then((toList) => {
+							toList.cards.push(cardId);
+							toList.save()
+								.then(() => {
+									Card.findById(cardId)
+										.then((card) => {
+											card.listId = to;
+											card.save()
+												.then(() => {
+													res.json({ msg: 'Card successfully relocated' });
+												})
+												.catch((err) => {
+													console.error('Error while saving card', err);
+													res.status(500).json({ msg: 'Internal server error' });
+												});
+										})
+										.catch((err) => {
+											console.error(err);
+											res.status(500).json({ msg: 'Internal server error' });
+										});
+								})
+								.catch((err) => {
+									console.error('Error while saving toList', err);
+									res.status(500).json({ msg: 'Internal server error' });
+								});
+						})
+						.catch((err) => {
+							console.error(err);
+							res.status(500).json({ msg: 'Internal server error' });
+						});
+				})
+				.catch((err) => {
+					console.error('Error while saving fromList', err);
+					res.status(500).json({ msg: 'Internal server error' });
+				});
+		})
+		.catch((err) => {
+			console.error(err);
+			res.status(500).json({ msg: 'Internal server error' });
+		});
+});
+
 module.exports = router;

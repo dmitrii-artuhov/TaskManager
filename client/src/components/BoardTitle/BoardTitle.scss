@@ -10,20 +10,21 @@
 		h4 {
 			font-size: $title-font-size;
 			font-weight: 550;
-			color: #4E4C4C;
+			color: #fff;
 			margin: 0 50px 0 0;
 		}
 
 		span {
 			font-size: $regular-font-size;
-			opacity: 0.5;
+			opacity: 0.7;
 		}
 	}
 
 	&-input {
 		font-size: $title-font-size;
 		font-weight: 550;
-		color: #4E4C4C;
+		color: #fff;
+		background: transparent;
 		margin: 0 50px 0 0;
 		padding: 0 10px !important;
 		border: none;

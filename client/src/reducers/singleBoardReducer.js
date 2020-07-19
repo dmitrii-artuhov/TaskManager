@@ -30,7 +30,11 @@ import {
 
 	// cards
 	BOARD_CARD_CREATING,
-	BOARD_CARD_CREATED
+	BOARD_CARD_CREATED,
+	
+	// Drag and Drop
+	BOARD_CARD_DRAG_DROP_SWITCH,
+	BOARD_CARD_DRAG_DROP_RELOCATE
 } from '../actions/types';
 
 const initialState = {
@@ -204,6 +208,20 @@ export default (state = initialState, action) => {
 				isCardCreating: false,
 				cardCreatingListId: '',
 				board: { ...state.board, lists }
+			}
+
+		// Drag and Drop
+		// Sitch cards
+		case BOARD_CARD_DRAG_DROP_SWITCH:
+			return {
+				...state,
+				board: { ...state.board, lists: [...action.payload.lists] }
+			}
+
+		case BOARD_CARD_DRAG_DROP_RELOCATE:
+			return {
+				...state,
+				board: { ...state.board, lists: [...action.payload.lists] }
 			}
 
 		default:

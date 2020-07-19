@@ -2,6 +2,8 @@ import React, { Component, Fragment } from 'react';
 import BoardPreview from '../BoardPreview/BoardPreview';
 import CustomInput from '../CustomInput/CustomInput';
 
+import { backgrounds } from '../../backgrounds.json';
+
 // styles
 import './BoardWrapper.scss';
 
@@ -26,8 +28,15 @@ class BoardsWrapper extends Component {
 		}
 	}
 
+	randomIndex = (min, max) => {
+		const val = min + Math.random() * (max - min); 
+		return Math.round(val);
+	}
+
 	createBoard = (value) => {
-		this.props.createBoard(value);
+		const backgroundURL = backgrounds[this.randomIndex(0, backgrounds.length - 1)];
+
+		this.props.createBoard({ title: value, backgroundURL });
 	}
 
 	render() {
@@ -38,10 +47,11 @@ class BoardsWrapper extends Component {
 					<h6>{this.props.title}</h6>
 					</div>
 					<div className="boards__content">
-						{this.props.items.map((board, item) => (
+						{this.props.items.map((board) => (
 							<BoardPreview
-							key={board._id}
-							board={board} />
+								key={board._id}
+								board={board}
+							/>
 						))}
 
 						{ this.props.type === 'OWNED' && (

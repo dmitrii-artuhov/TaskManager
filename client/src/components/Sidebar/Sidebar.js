@@ -11,7 +11,7 @@ class Sidebar extends Component {
 	componentDidUpdate = () => {
 		// check for board
 		if (!this.props.board) {
-			window.location.replace('/');
+			// window.location.replace('/');
 		}
 	}
 

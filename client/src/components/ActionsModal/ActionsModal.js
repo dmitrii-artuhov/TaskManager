@@ -44,21 +44,19 @@ export default class ActionsModal extends Component {
 	render() {
 		return (
 			<Fragment>
-				{ this.state.isOpen ? (
-					<div className="list__action-modal">
-						<div className="list__action-title">
-							<h6>Actions</h6>
-							<div onClick={ this.closeModal } className="list__action-close">
-								<span></span>
-								<span></span>
-							</div>
+				<div className="list__action-modal">
+					<div className="list__action-title">
+						<h6>Actions</h6>
+						<div onClick={ this.closeModal } className="list__action-close">
+							<span></span>
+							<span></span>
 						</div>
-
-						<ul className="list__action-commands">
-							{ this.props.children }
-						</ul>
 					</div>
-				) : ( null ) }
+
+					<ul className="list__action-commands">
+						{ this.props.children }
+					</ul>
+				</div>
 			</Fragment>
 		)
 	}

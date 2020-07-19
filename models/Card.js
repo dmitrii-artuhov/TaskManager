@@ -20,6 +20,10 @@ const CardSchema = new Schema({
 	description: {
 		type: String
 	},
+	listId: {
+		type: Schema.Types.ObjectId,
+		required: true
+	},
 	status: {
 		type: String,
 		enum: ['OPEN', 'FAILED', 'COMPLETED'],

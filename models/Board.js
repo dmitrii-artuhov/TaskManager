@@ -6,7 +6,7 @@ const BoardSchema = new Schema({
 		type: String,
 		required: true
 	},
-	backgroundImage: {
+	backgroundURL: {
 		type: String
 	},
 	participants: [

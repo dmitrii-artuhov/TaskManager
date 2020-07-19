@@ -8,7 +8,17 @@ export default class CardsWrapper extends Component {
 			<div className="list__cards">
 				<ul>
 					{ this.props.items
-					?	this.props.items.map((card) => <CardItem onClick={this.props.onView} key={card._id} card={card} />)
+					?	this.props.items.map((card) => 
+						<CardItem
+						// Drag and Drop
+						dragAndDrop={this.props.dragAndDrop}
+						moveItem={this.props.moveItem}
+						setDragElement={this.props.setDragElement}
+						// Content
+						onClick={this.props.onView}
+						key={card._id}
+						card={card}
+						/>)
 					: '' }
 
 					{ this.props.isCreatingCard ? (

@@ -7,6 +7,8 @@
 	box-sizing: border-box;
 	padding: 10px;
 	position: relative;
+	background-color: rgba(255, 255, 255, .45);
+	border-radius: 7px;
 
 	&__title {
 		display: flex;
@@ -34,7 +36,7 @@
 		width: 7px;
 		height: 7px;
 		border-radius: 50%;
-		background: #C46DFA;
+		background: $high-light-supporting-color //#C46DFA;
 	}
 
 	&__kebab-menu {
@@ -50,7 +52,7 @@
 			width: 5px;
 			height: 5px;
 			border-radius: 50%;
-			background: rgba(0, 0, 0, 0.2);
+			background: rgba(0, 0, 0, 0.4);
 		}
 	}
 
@@ -94,6 +96,7 @@
 		box-sizing: border-box;
 		padding: 15px 10px;
 		transition: all .1s ease-in;
+		background-color: #fff;
 
 		&:hover {
 			box-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
@@ -125,7 +128,7 @@
 		height: 100%;
 		width: 3px;
 		border-radius: 10px;
-		background-color: #C46DFA;
+		background-color: $high-light-supporting-color;
 		margin-right: 3px;
 	}
 
@@ -190,5 +193,12 @@
 		border: none;
 		outline: none;
 		border-bottom: 1px solid rgba(0, 0, 0, .1);
+	}
+}
+
+
+@media all and (max-width: 768px) {
+	.list {
+		margin-bottom: 10px;
 	}
 }

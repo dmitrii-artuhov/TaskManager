@@ -3,7 +3,35 @@ import React, { Component } from 'react';
 // styles
 import './CardItem.scss';
 
+/*
+// drag and drop stuff
+props:
+	moveItem: function() {},
+	setDragElement: function() {}
+*/
+
 export default class CardItem extends Component {
+	// Drag and Drop
+	onDragStart = ({ dataTransfer, target }) => {
+		dataTransfer.setData('CardItem', JSON.stringify(this.props.card));
+		this.props.setDragElement(this.props.card);
+		target.style.visibility = 'hidden';		
+	}
+
+	onDragOver = (e) => {
+		// vertical sorting inside a container
+		this.props.moveItem(this.props.card);
+		e.preventDefault();
+	}
+
+	onDragEnd = (e) => {
+		this.props.dragAndDrop({ type: 'SWITCH' });
+		this.props.setDragElement(null);
+		e.target.style.visibility = 'visible';
+	}
+
+
+	// CardItem
 	countCheckedToDos = () => {
 		let count = 0;
 		this.props.card.checklist.map((todo) => todo.checked && count++);
@@ -30,10 +58,17 @@ export default class CardItem extends Component {
 	render() {
 		return (
 			<li 
+			// Drag and Drop functionality
+			draggable="true"
+			onDragStart={this.onDragStart}
+			onDragOver={this.onDragOver}
+			onDragEnd={this.onDragEnd}
+
+			// Primary functionality
 			onClick={this.onClick}
 			style={ { background: this.props.card.status === 'COMPLETED' ? '#D6FFF2' : this.props.card.status === 'FAILED' ? '#FFE6DB' : '' } }
-			// onClick={ () => this.viewCard(card._id) }
-			className="list__card">
+			className="list__card"
+			>
 				<div className="list__meta">
 					<span
 					style={ { background: this.props.card.status === 'COMPLETED' ? '#5DE0B9' : this.props.card.status === 'FAILED' ? '#FC5151' : '' } }

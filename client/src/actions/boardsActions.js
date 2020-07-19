@@ -30,7 +30,7 @@ export const loadBoards = () => (dispatch) => {
 }
 
 // create a new board
-export const createBoard = (title) => (dispatch) => {
+export const createBoard = ({ title, backgroundURL }) => (dispatch) => {
 	// board's being created
 	dispatch({ type: BOARD_CREATING });
 
@@ -40,7 +40,7 @@ export const createBoard = (title) => (dispatch) => {
 	}
 
 	// axios.post('/api/boards/create', { title })
-	createSingleBoard({ title })
+	createSingleBoard({ title, backgroundURL })
 		.then(({ data }) => {
 			dispatch({
 				type: BOARD_CREATED,

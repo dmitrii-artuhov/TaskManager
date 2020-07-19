@@ -2,6 +2,7 @@
 
 .fullview {
 	&__sidebar {
+		transition: background-color .3s ease-in;
 		box-sizing: border-box;
 		padding: 70px 25px 20px 25px;
 		display: flex;

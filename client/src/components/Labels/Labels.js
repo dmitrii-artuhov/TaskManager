@@ -3,6 +3,8 @@ import React, { Component, Fragment } from 'react';
 // components
 import ColorPallete from '../ColorPallete/ColorPallete';
 import Skeleton from "react-loading-skeleton";
+import { CSSTransition } from 'react-transition-group';
+
 
 // styles
 import './Labels.scss';
@@ -111,15 +113,23 @@ export default class Labels extends Component {
 										style={{ background: label.color }}>
 											{ label.title }
 										</div>
-										<ColorPallete
-										ref={`pallete-${index}`}
-										label={label}
-										onSave={(updatedLabel) => this.updateLabel(updatedLabel)}
-										onChange={(updatedLabel) => this.applyChangesToLabel(updatedLabel)}
-										onDelete={ () => this.deleteLabel(label._id) }
-										onClose={ () => this.togglePalleteModal() }
-										isOpen={ this.state.palleteOpenId === index }
-										/>
+
+										<CSSTransition
+											in={this.state.palleteOpenId === index}
+											timeout={200}
+											classNames="color-pallete-animate"
+											unmountOnExit
+										>
+											<ColorPallete
+											ref={`pallete-${index}`}
+											label={label}
+											onSave={(updatedLabel) => this.updateLabel(updatedLabel)}
+											onChange={(updatedLabel) => this.applyChangesToLabel(updatedLabel)}
+											onDelete={ () => this.deleteLabel(label._id) }
+											onClose={ () => this.togglePalleteModal() }
+											isOpen={ this.state.palleteOpenId === index }
+											/>
+										</CSSTransition>
 									</div>
 								)) : <p>No labels</p> }
 							</div>

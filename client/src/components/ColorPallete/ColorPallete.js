@@ -9,7 +9,11 @@ export default class ColorPallete extends Component {
 		super(props);
 
 		this.state = {
-			label: null
+			label: {
+				_id: null,
+				title: '',
+				color: ''
+			}
 		}
 	}
 
@@ -67,43 +71,39 @@ export default class ColorPallete extends Component {
 
 	render() {
 		return (
-			this.props.isOpen ? (
-				<div className={`color-pallete__modal color-pallete__modal-${this.state.label._id}`}>
-					<div className="color-pallete__title">
-						<form
-							onSubmit={this.onSubmit}
-						>
-							<input
-							autoFocus
-							onChange={this.inputTitle}
-							value={this.state.label.title}
-							className="color-pallete__input"
-							type="text"/>
-						</form>
-						<div
-						onClick={ () => { this.closeModal(); } }
-						className="color-pallete__close">
-							<span></span>
-							<span></span>
-						</div>
+			<div className={`color-pallete__modal color-pallete__modal-${this.state.label._id}`}>
+				<div className="color-pallete__title">
+					<form
+						onSubmit={this.onSubmit}
+					>
+						<input
+						autoFocus
+						onChange={this.inputTitle}
+						value={this.state.label.title}
+						className="color-pallete__input"
+						type="text"/>
+					</form>
+					<div
+					onClick={ () => { this.closeModal(); } }
+					className="color-pallete__close">
+						<span></span>
+						<span></span>
 					</div>
-					<div className="color-pallete__pallete">
-						{colors.map((color, index) => (
-							<div
-							key={index}
-							style={ {background: color} }
-							className="color-pallete__color"
-							onClick={ () => this.setColor(color) }
-							></div>
-						))}
-					</div>
-					<ul className="color-pallete__actions">
-						<li onClick={ this.deleteLabel } className="color-pallete__actions-item">Delete</li>
-					</ul>
 				</div>
-			) : (
-				null
-			)
-		)
+				<div className="color-pallete__pallete">
+					{colors.map((color, index) => (
+						<div
+						key={index}
+						style={ {background: color} }
+						className="color-pallete__color"
+						onClick={ () => this.setColor(color) }
+						></div>
+					))}
+				</div>
+				<ul className="color-pallete__actions">
+					<li onClick={ this.deleteLabel } className="color-pallete__actions-item">Delete</li>
+				</ul>
+			</div>
+		);
 	}
 }

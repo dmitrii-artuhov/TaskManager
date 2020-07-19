@@ -52,6 +52,12 @@ export const BOARD_LIST_RENAME = 'BOARD_LIST_RENAME';
 // - cards
 export const BOARD_CARD_CREATING = 'BOARD_CARD_CREATING';
 export const BOARD_CARD_CREATED = 'BOARD_CARD_CREATED';
+// Drag and Drop
+// switch
+export const BOARD_CARD_DRAG_DROP_SWITCH = 'BOARD_CARD_DRAG_DROP_SWITCH';
+// relocate
+export const BOARD_CARD_DRAG_DROP_RELOCATE = 'BOARD_CARD_DRAG_DROP_RELOCATE';
+
 
 // single card
 export const SINGLE_CARD_SELECTED = 'SINGLE_CARD_SELECTED';

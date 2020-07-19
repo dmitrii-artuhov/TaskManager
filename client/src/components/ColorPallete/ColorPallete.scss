@@ -116,6 +116,24 @@
 		}
 }
 
+// animation using CSSTransition Group
+.color-pallete-animate {
+	&-enter {
+		opacity: 0;
+	}
+	&-enter-active {
+		opacity: 1;
+		transition: all 200ms;
+	}
+	&-exit {
+		opacity: 1;
+	}
+	&-exit-active {
+		opacity: 0;
+		transition: all 200ms;
+	}
+}
+
 
 @media all and (max-width: 768px) {
 	.color-pallete {

@@ -5,6 +5,12 @@ body {
 	font-family: 'Montserrat', sans-serif;
 }
 
+* {
+	input {
+		background-color: transparent;
+	}
+}
+
 // Default layout elements styles
 .main-button {
 	background-color: $dark-main-color;

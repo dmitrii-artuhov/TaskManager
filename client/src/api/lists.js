@@ -20,3 +20,14 @@ export const updateListById = ({ listId, boardId, newTitle }) => {
 		title: newTitle
 	})
 }
+
+// Drag and Drop
+export const switchCard = (data) => {
+	// data = { boardId, listId, cards }
+	return axios.post('/api/lists/switch', data);
+}
+
+export const relocateCard = (data) => {
+	// data = { boardId, from, to, cardId }
+	return axios.post('/api/lists/relocate', data);
+}

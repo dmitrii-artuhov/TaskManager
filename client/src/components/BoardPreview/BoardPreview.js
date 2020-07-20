@@ -49,11 +49,11 @@ export default class BoardPreview extends Component {
 						{ this.props.board.participants.map((participant) => (
 							<li key={ participant.user._id }>
 								<div className="boards__user">
-									<img src="/assets/imgs/user_avatar.png" alt="avatar" />
+									<img src={`/assets/avatars/${participant.user.avatar}`} alt="avatar" />
 								</div>
 
 								<div className="target-box boards__user-target">
-								<span>{ participant.user.name }</span>
+									<span>{ participant.user.name }</span>
 								</div>
 							</li>
 						)) }

@@ -11,7 +11,7 @@ const auth = require('../../middleware/auth');
 
 // register user
 router.post('/register', (req, res) => {
-	const { email, name, username, password } = req.body;
+	const { email, name, username, password, avatar } = req.body;
 	if (!email || !name || !username || !password) {
 		return res.status(400).json({ msg: 'Please, enter all fields', type: 'error' });
 	}
@@ -30,7 +30,8 @@ router.post('/register', (req, res) => {
 							email,
 							name, 
 							username,
-							password
+							password,
+							avatar
 						});
 						
 						// hash password
@@ -102,6 +103,33 @@ router.post('/login', (req, res, next) => {
 router.get('/logout', (req, res) => {
 	req.logout();
 	res.json({ msg: 'Logged out successfully', type: 'success' });
+});
+
+// update user
+router.put('/update/:id', auth.ensureAuthentication, (req, res) => {
+	const { id } = req.params;
+	const { avatar } = req.body;
+
+	User.findById(id)
+		.then((user) => {
+			if (!user) {
+				return res.status(404).json({ msg: 'User not found' });
+			}
+
+			user.avatar = avatar;
+			user.save()
+				.then((user) => {
+					res.json({ msg: 'User successfully updated', user });
+				})
+				.catch((err) => {
+					console.error('Error while saving the user when updating it', err);
+					res.status(500).json({ msg: 'Internal server error' });
+				});
+		})
+		.catch((err) => {
+			console.error('Error while updating the user', err);
+			res.status(500).json({ msg: 'Internal server error' });
+		});
 });
 
 // retrieve user - used for page reload

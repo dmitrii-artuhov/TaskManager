@@ -1,4 +1,7 @@
 // user
+export const USER_UPDATING = 'USER_UPDATING';
+export const USER_UPDATED = 'USER_UPDATED';
+
 export const USER_RETRIEVING = 'USER_RETRIEVING';
 export const USER_RETRIEVED = 'USER_RETRIEVED';
 

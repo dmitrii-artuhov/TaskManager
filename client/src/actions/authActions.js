@@ -55,7 +55,7 @@ export const loadUser = () => (dispatch) => {
 }
 
 // Register user
-export const register = ({ email, password, username, usertag }) => (dispatch) => {
+export const register = ({ email, password, username, usertag, avatar }) => (dispatch) => {
 	// user is loading
 	dispatch({ type: USER_LOADING	});
 
@@ -72,7 +72,8 @@ export const register = ({ email, password, username, usertag }) => (dispatch) =
 		email,
 		name: username,
 		password,
-		username: usertag
+		username: usertag,
+		avatar
 	});
 
 	registerUser({ userCredencials, config })

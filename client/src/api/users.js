@@ -15,3 +15,7 @@ export const loginUser = ({ userCredencials, config }) => {
 export const logoutUser = () => {
 	return axios.get('/api/users/logout');
 }
+
+export const updateUser = ({ id, avatar }) => {
+	return axios.put(`/api/users/update/${id}`, { avatar });
+}

@@ -1,5 +1,10 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
+import { updateAvatar } from '../../actions/userActions';
+
+import AvatarsModal from '../AvatarsModal/AvatarsModal';
+import { CSSTransition } from 'react-transition-group';
+import { Spinner } from 'react-bootstrap';
 
 // styles
 import './ProfileCard.scss';
@@ -9,7 +14,8 @@ class ProfileCard extends Component {
 		super(props);
 
 		this.state = {
-			user: null
+			user: null,
+			isAvatarsOpen: false
 		}
 	}
 
@@ -26,6 +32,13 @@ class ProfileCard extends Component {
 				user
 			});
 		}
+	}
+
+	// toggle avatars modal
+	toggleAvatarsModal = () => {
+		this.setState({
+			isAvatarsOpen: !this.state.isAvatarsOpen
+		});
 	}
 
 	render() {
@@ -76,13 +89,33 @@ class ProfileCard extends Component {
 					</div>
 					<div className="profile-card__avatar">
 						<div className="profile-card__circle">
-							<img src="/assets/imgs/avatar.png" alt="avatar" />
+							{ this.props.isUpdating && (
+								<div className="profile-card__fade">
+									<Spinner className="profile-card__loader" animation="border" variant="primary" role="status">
+										<span className="sr-only">Loading...</span>
+									</Spinner>
+								</div>
+							) }
+							
+							<img style={{height: 150, width: 150}} src={`/assets/avatars/${this.state.user && (this.state.user.avatar ? this.state.user.avatar : 'avataaar-1.svg')}`} alt="avatar" />
 						</div>
 
-						<label htmlFor="avatar" className="main-button profile-card__button">
+						<button onClick={this.toggleAvatarsModal} className="main-button profile-card__button">
 							Change
-						</label>
-						<input type="file" id="avatar" />
+						</button>
+						<CSSTransition
+							in={this.state.isAvatarsOpen}
+							timeout={200}
+							classNames="avatars__modal-animate"
+							unmountOnExit
+						>
+							<AvatarsModal
+								userId={this.props.user._id}
+								onUpdate={this.props.updateAvatar}
+								isOpen={this.state.isAvatarsOpen}
+								onClose={this.toggleAvatarsModal}
+							/>
+						</CSSTransition>
 					</div>
 				</div>
 				</div>
@@ -92,9 +125,11 @@ class ProfileCard extends Component {
 }
 
 const mapStateToProps = (state) => ({
+	isUpdating: state.auth.isUpdating,
 	user: state.auth.user
 });
 
 export default connect(
-	mapStateToProps
+	mapStateToProps,
+	{ updateAvatar }
 )(ProfileCard);

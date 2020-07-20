@@ -13,8 +13,19 @@
 	border-radius: 7px;
 	box-shadow: 0 1px 7px rgba(0, 0, 0, 0.15);
 
-	input[type="file"] {
-		display: none;
+	&__fade {
+		background-color: rgba(0, 0, 0, 0.2);
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	&__loader {
+		border-color: $high-light-supporting-color !important;
+    border-right-color: transparent !important;
 	}
 
 	&__info {

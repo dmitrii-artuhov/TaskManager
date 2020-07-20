@@ -38,6 +38,7 @@ class RegisterModal extends Component {
 			password: '',
 			username: '',
 			usertag: '',
+			avatar: 'avataaar-1.svg', // default
 			message: {
 				msg: null,
 				status: null,
@@ -80,9 +81,6 @@ class RegisterModal extends Component {
 			type: 'REGISTER'
 		});
 		this.props.clearMessages();
-		// this.setState({
-		// 	isOpen: !this.state.isOpen
-		// });
 	}
 
 	inputField = (e) => {
@@ -96,7 +94,7 @@ class RegisterModal extends Component {
 		e.preventDefault();
 
 		// simple validation
-		const { email, username, password, usertag } = this.state;
+		const { email, username, password, usertag, avatar } = this.state;
 		if (!email || !username || !password || !usertag || usertag[0] !== '@' || usertag.length === 1) {
 			// send validation error to the alerting system
 			const msg = 'Provide all fields with valid values', 
@@ -110,7 +108,8 @@ class RegisterModal extends Component {
 			email,
 			password,
 			username,
-			usertag
+			usertag,
+			avatar
 		}
 
 		// calling redux action to register

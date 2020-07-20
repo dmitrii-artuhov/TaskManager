@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import BoardPreview from '../BoardPreview/BoardPreview';
 import CustomInput from '../CustomInput/CustomInput';
 
-import { backgrounds } from '../../backgrounds.json';
+import { backgrounds } from '../../static.json';
 
 // styles
 import './BoardWrapper.scss';

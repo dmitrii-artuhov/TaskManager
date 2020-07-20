@@ -18,7 +18,7 @@ router.get('/get', auth.ensureAuthentication, (req, res) => {
 			path: 'ownBoards',
 			populate: {
 				path: 'participants.user',
-				select: 'name',
+				select: 'name avatar',
 				model: 'User'
 			} 
 		})

@@ -1,4 +1,7 @@
 import { 
+	USER_UPDATING,
+	USER_UPDATED,
+
 	USER_RETRIEVING,
 	USER_RETRIEVED,
 
@@ -18,6 +21,7 @@ const initialState = {
 	isAuthenticated: null,
 	isLoading: false,
 	isRetrieving: false,
+	isUpdating: false,
 	user: null,
 	modal: {
 		isOpen: false,
@@ -27,6 +31,22 @@ const initialState = {
 
 export default (state = initialState, action) => {
 	switch (action.type) {
+		case USER_UPDATING:
+			return {
+				...state,
+				isUpdating: true
+			}
+
+		case USER_UPDATED:
+			return {
+				...state,
+				isUpdating: false,
+				user: {
+					...state.user,
+					avatar: action.payload.avatar
+				}
+			}
+
 		case TOGGLE_AUTH_MODAL:
 			return {
 				...state,

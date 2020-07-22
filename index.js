@@ -6,8 +6,6 @@ const session = require('express-session');
 // Passport
 const passport = require('passport');
 require('./middleware/passport')(passport);
-// middleware
-const auth = require('./middleware/auth');
 
 // middleware
 app.use(express.json());

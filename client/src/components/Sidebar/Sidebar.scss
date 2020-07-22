@@ -1,6 +1,7 @@
 @import '../../variables.scss';
 
 .sidebar {
+	position: relative;
 	min-height: calc(100vh - 56px);
 	height: inherit;
 	display: flex;
@@ -11,7 +12,7 @@
 	box-sizing: border-box;
 	padding: 20px 25px;
 
-	ul {
+	&__list {
 		padding: 0;
 		list-style: none;
 	}
@@ -42,7 +43,7 @@
 		flex-direction: row;
 		padding: 10px 25px;
 
-		ul {
+		&__list {
 			display: flex;
 			margin: 0;
 		}

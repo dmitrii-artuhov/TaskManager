@@ -33,7 +33,7 @@ class BoardInfo extends Component {
 			<div className="container board-info">
 				<div className="board-info__meta">
 					<BoardTitle />
-					<Participants />
+					<Participants participants={this.props.board.participants} />
 				</div>
 
 				<ListsWrapper

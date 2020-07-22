@@ -18,7 +18,7 @@ router.get('/get', auth.ensureAuthentication, (req, res) => {
 			path: 'ownBoards',
 			populate: {
 				path: 'participants.user',
-				select: 'name avatar',
+				select: '-password',
 				model: 'User'
 			} 
 		})
@@ -26,7 +26,7 @@ router.get('/get', auth.ensureAuthentication, (req, res) => {
 			path: 'sharedBoards',
 			populate: {
 				path: 'participants.user',
-				select: 'name',
+				select: '-password',
 				model: 'User'
 			} 
 		})
@@ -57,7 +57,7 @@ router.post('/create', auth.ensureAuthentication, (req, res) => {
 		.then((board) =>
 			board.populate({ 
 				path: 'participants.user',
-				select: 'name',
+				select: '-password',
 				model: 'User' 
 			})
 			.execPopulate()

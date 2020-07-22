@@ -84,15 +84,22 @@ router.post('/create', auth.ensureAuthentication, isBoardParticipant.checkBoardP
 					// assign created list to its board
 					board.lists.push(list._id);
 					board.save()
-						.then((updateBoard) => {
-							Board.populate(updateBoard, { path: 'lists', populate: { path: 'cards' } }, (err, populatedBoard) => {
-								if (err) {
-									console.error('Error while creating new list when populating the board', err);
-									return res.status(500).json({ msg: 'Internal server error' }); 
-								}
-
-								res.json({ board: populatedBoard, msg: 'New list created successfully' });
-							});
+						.then((updateBoard) => 
+							updateBoard
+								.populate({
+									path: 'lists',
+									populate: {
+										path: 'cards'
+									}
+								})
+								.populate({
+									path: 'participants.user',
+									select: '-password'
+								})
+								.execPopulate()
+						)
+						.then(board => {
+							res.json({ board, msg: 'New list created successfully' });
 						})
 						.catch((err) => {
 							console.log(err);
@@ -137,15 +144,22 @@ router.delete('/delete/:id', auth.ensureAuthentication, isBoardParticipant.check
 						});
 
 						board.save()
-							.then((updatedBoard) => { 
-								Board.populate(updatedBoard, { path: 'lists', populate: { path: 'cards' } }, (err, populatedBoard) => {
-									if (err) {
-										console.error('Error while populating board field when deleting a list', err);
-										return res.status(500).json({ msg: 'Internal server error' });
-									}
-
-									res.json({ msg: 'List deleted successfully', board: populatedBoard });
-								});
+							.then((updatedBoard) => 
+								updatedBoard
+									.populate({
+										path: 'lists',
+										populate: {
+											path: 'cards'
+										}
+									})
+									.populate({
+										path: 'participants.user',
+										select: '-password'
+									})
+									.execPopulate()
+							)
+							.then(board => {
+								res.json({ msg: 'List deleted successfully', board });
 							})
 							.catch((err) => {
 								console.error(err);

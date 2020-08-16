@@ -1,6 +1,4 @@
 import React, { Component, Fragment } from 'react';
-import { connect } from 'react-redux';
-import { updateAvatar } from '../../actions/userActions';
 
 import AvatarsModal from '../AvatarsModal/AvatarsModal';
 import { CSSTransition } from 'react-transition-group';
@@ -14,23 +12,7 @@ class ProfileCard extends Component {
 		super(props);
 
 		this.state = {
-			user: null,
 			isAvatarsOpen: false
-		}
-	}
-
-	componentDidMount = () => {
-		this.setState({
-			user: this.props.user
-		});
-	}
-
-	componentDidUpdate = (prevProps) => {
-		const { user } = this.props;
-		if (user !== prevProps.user) {
-			this.setState({
-				user
-			});
 		}
 	}
 
@@ -52,19 +34,19 @@ class ProfileCard extends Component {
 							<div className="profile-card__field">
 								<ul>
 									<li>Email Address:</li>
-									<li>{ this.state.user ? this.state.user.email : '' }</li>
+									<li>{ this.props.user.email }</li>
 								</ul>
 							</div>
 							<div className="profile-card__field">
 								<ul>
 									<li>Full Name:</li>
-									<li>{ this.state.user ? this.state.user.name : '' }</li>
+									<li>{ this.props.user.name }</li>
 								</ul>
 							</div>
 							<div className="profile-card__field">
 								<ul>
 									<li>Usertag:</li>
-									<li>{ this.state.user ? this.state.user.username : '' }</li>
+									<li>{ this.props.user.username }</li>
 								</ul>
 							</div>
 						</div>
@@ -76,13 +58,13 @@ class ProfileCard extends Component {
 							<div className="profile-card__field">
 								<ul>
 									<li>Personal:</li>
-									<li>{ this.state.user ? this.state.user.ownBoards.length : '' }</li>
+									<li>{ this.props.user.ownBoards.length }</li>
 								</ul>
 							</div>
 							<div className="profile-card__field">
 								<ul>
 									<li>Shared:</li>
-									<li>{ this.state.user ? this.state.user.sharedBoards.length : '' }</li>
+									<li>{ this.props.user.sharedBoards.length }</li>
 								</ul>
 							</div>
 						</div>
@@ -97,7 +79,7 @@ class ProfileCard extends Component {
 								</div>
 							) }
 							
-							<img style={{height: 150, width: 150}} src={`/assets/avatars/${this.state.user && (this.state.user.avatar ? this.state.user.avatar : 'avataaar-1.svg')}`} alt="avatar" />
+							<img style={{height: 150, width: 150}} src={`/assets/avatars/${this.props.user && (this.props.user.avatar ? this.props.user.avatar : 'avataaar-1.svg')}`} alt="avatar" />
 						</div>
 
 						<button onClick={this.toggleAvatarsModal} className="main-button profile-card__button">
@@ -111,7 +93,7 @@ class ProfileCard extends Component {
 						>
 							<AvatarsModal
 								userId={this.props.user._id}
-								onUpdate={this.props.updateAvatar}
+								onUpdate={this.props.onUpdate}
 								isOpen={this.state.isAvatarsOpen}
 								onClose={this.toggleAvatarsModal}
 							/>
@@ -124,12 +106,5 @@ class ProfileCard extends Component {
 	}
 }
 
-const mapStateToProps = (state) => ({
-	isUpdating: state.auth.isUpdating,
-	user: state.auth.user
-});
 
-export default connect(
-	mapStateToProps,
-	{ updateAvatar }
-)(ProfileCard);
+export default ProfileCard;

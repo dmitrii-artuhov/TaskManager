@@ -162,4 +162,17 @@ router.get('/find/:id', (req, res) => {
 		});
 });
 
+// find all users
+router.get('/find/', (req, res) => {
+	User.find()
+		.select('-password')
+		.then((users) => {
+			res.json({ users });
+		})
+		.catch((err) => {
+			console.error('Error while getting all users', err);
+			return res.status(500).json({ msg: 'Internal server error' });	
+		});
+});
+
 module.exports = router;

@@ -9,33 +9,35 @@ const isBoardAdmin = require('../../middleware/isBoardAdmin');
 
 // add new participant to the board (authenticated users and admins only)
 router.post('/add', auth.ensureAuthentication, isBoardAdmin.checkBoardAdmin, (req, res) => {
-	const { boardId, participantId } = req.body;
+	const { boardId, username } = req.body;
 	const { userId } = req;
 
-	if (!boardId || !userId || !participantId) {
+	if (!boardId || !userId || !username) {
 		return res.status(400).json({ msg: 'Provide all fields' });
-	}
-
-	// make sure that user does not add himself
-	if (userId == participantId) {
-		return res.status(400).json({ msg: 'You cannot add youself' });
 	}
 
 	// find the particular board
 	Board.findOne({ _id: boardId })
+		.populate('participants.user')
 		.then((board) => {
 			// find new participant
-			User.findOne({ _id: participantId })
+			User.findOne({ username })
 				.then((user) => {
 					if (!user) {
 						return res.status(404).json({ msg: 'User not found. Participant cannot be added' });
 					}
 
+					// make sure that user does not add himself
+					if (user._id === userId) {
+						return res.status(400).json({ msg: 'You cannot add youself' });
+					}
+
 					// check if particular participant already added to the board
 					let participantAlreadyExists = false;
 					board.participants.forEach((item) => {
-						if (item.user == participantId) participantAlreadyExists = true;
+						if (item.user.username == username) participantAlreadyExists = true;
 					});
+
 					if (participantAlreadyExists) {
 						return res.status(400).json({ msg: 'Participant already included' });
 					}
@@ -43,26 +45,40 @@ router.post('/add', auth.ensureAuthentication, isBoardAdmin.checkBoardAdmin, (re
 					// create and add to the board a new participant
 					const newParticipant = {
 						role: 'normal',
-						user: participantId
+						user: user._id
 					}
 					board.participants.push(newParticipant);
 
 					// assigning board to the participant
 					user.sharedBoards.push(boardId);
 					user.save()
-						.catch((err) => {
-							console.error(err);
-						})
-
-					// saving board with a new participant
-					board.save()
-						.then(() => {
-							res.json({ msg: 'New participant added successfully', participants: board.participants });
+						.then((user) => {
+							// saving board with a new participant
+							board.save()
+								.then((board) => 
+									board
+									.populate({
+										path: 'lists',
+										populate: { path: 'cards' }
+									})
+									.populate({
+										path: 'participants.user',
+										select: '-password'
+									})
+									.execPopulate()
+								)
+								.then((board) => {
+									res.json({ msg: 'New participant added successfully', board, participant: user });
+								})
+								.catch((err) => {
+									console.error(err);
+									res.status(500).json({ msg: 'Internal server error' });
+								});
 						})
 						.catch((err) => {
 							console.error(err);
 							res.status(500).json({ msg: 'Internal server error' });
-						})				
+						});
 				})
 				.catch((err) => {
 					console.error(err);
@@ -108,7 +124,21 @@ router.delete('/delete', auth.ensureAuthentication, isBoardAdmin.checkBoardAdmin
 
 			// save updated board
 			board.save()
-				.then(() => {
+				.then((updateBoard) => 
+					updateBoard
+						.populate({
+							path: 'lists',
+							populate: {
+								path: 'cards'
+							}
+						})
+						.populate({
+							path: 'participants.user',
+							select: '-password'
+						})
+						.execPopulate()
+				)
+				.then((board) => {
 					// find participant and exclude particular board from his sharedBoards list
 					User.findOne({ _id: participantId })
 						.then((user) => {
@@ -120,7 +150,7 @@ router.delete('/delete', auth.ensureAuthentication, isBoardAdmin.checkBoardAdmin
 							user.sharedBoards = user.sharedBoards.filter((item) => item != boardId);
 							user.save()
 								.then(() => {
-									res.json({ msg: 'Participant successfully excluded from board' });
+									res.json({ msg: 'Participant successfully excluded from board', board, participant: user });
 								})
 								.catch((err) => {
 									console.error(err);

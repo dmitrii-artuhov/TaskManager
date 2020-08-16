@@ -43,7 +43,8 @@ export default (state = initialState, action) => {
 				isUpdating: false,
 				user: {
 					...state.user,
-					avatar: action.payload.avatar
+					//avatar: action.payload.avatar
+					...action.payload.user
 				}
 			}
 

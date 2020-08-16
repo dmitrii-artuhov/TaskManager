@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import Autocomplete from '../Autocomplete/Autocomplete';
 
 // styles
 import './ParticipantsModal.scss';
@@ -40,6 +41,11 @@ export default class ParticipantsModal extends Component {
 		this.props.onClose();
 	}
 
+	// remove participant
+	removeParticipant = (userId) => {
+		this.props.onRemove(userId);
+	}
+
 	render() {
 		return (
 			<Fragment>
@@ -51,26 +57,39 @@ export default class ParticipantsModal extends Component {
 							<span></span>
 						</div>
 					</div>
-					{ this.props.autoComplete && (
-						<input
-						autoFocus
-						className="participants-input"
-						type="text"/>
+					{ this.props.autoComplete ? (
+						<Autocomplete
+							onInvite={this.props.onInvite}
+							isInvalid={this.props.isInvalid}
+							items={this.props.items}
+							onClose={this.closeModal}
+						/>
+					) : (
+						<ul className="participants-users">
+							{ this.props.items ? this.props.items.map((item) => 
+								<li onClick={this.props.onClick} key={item.user._id}>
+									<div className="participants-users__wrapper">
+										<div className="participants-users__avatar">
+											<img src={`/assets/avatars/${item.user.avatar}`} alt="avatar"/>
+										</div>
+										<div className="participants-users__name">
+											{item.user.username}
+										</div>
+									</div>
+									{ !this.props.autoComplete && item.user._id !== this.props.userId && (
+										<div className="participants-users__cross">
+											<img
+											onClick={() => this.removeParticipant(item.user._id)}
+											src="/assets/imgs/todo-cross.svg"
+											alt="todo-cross"/>
+										</div>
+									) }
+								</li>
+							) : (
+								null
+							) }
+						</ul>
 					) }
-					<ul className="participants-users">
-						{ this.props.items ? this.props.items.map((item) => 
-							<li onClick={this.props.onClick} key={item.user._id}>
-								<div className="participants-users__avatar">
-									<img src={`/assets/avatars/${item.user.avatar}`} alt="avatar"/>
-								</div>
-								<div className="participants-users__name">
-									{item.user.username}
-								</div>
-							</li>
-						) : (
-							null
-						) }
-					</ul>
 				</div>
 			</Fragment>
 		)

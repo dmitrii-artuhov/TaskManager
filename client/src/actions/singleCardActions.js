@@ -1,3 +1,4 @@
+// TYPES
 import {
 	SINGLE_CARD_SELECTED,
 	SINGLE_CARD_UNSELECTED,
@@ -15,6 +16,8 @@ import {
 	SINGLE_CARD_TODO_CREATING,
 	SINGLE_CARD_TODO_CREATED
 } from './types';
+
+// API
 import {
 	// card
 	getCardById,
@@ -30,6 +33,11 @@ import {
 	deleteToDoById
 } from '../api/cards';
 
+
+// SOCKETS
+import { updateBoardRoom } from '../sockets/boardSockets';
+
+
 //------- CARD
 // open card
 export const selectCardById = ({ cardId, listId, boardId }) => (dispatch) => {
@@ -43,8 +51,10 @@ export const selectCardById = ({ cardId, listId, boardId }) => (dispatch) => {
 	});
 }
 // close card
-export const unselectCard = () => (dispatch) => {
+export const unselectCard = ({ boardId }) => (dispatch) => {
 	dispatch({ type: SINGLE_CARD_UNSELECTED });
+	// make other users update their boards
+	updateBoardRoom({ roomId: boardId });
 }
 // load card
 export const loadSingleCard = ({ cardId, boardId }) => (dispatch) => {

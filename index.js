@@ -6,6 +6,11 @@ const session = require('express-session');
 // Passport
 const passport = require('passport');
 require('./middleware/passport')(passport);
+// Socket IO
+const http = require('http').createServer(app);
+const io = require('socket.io')(http);
+const socketsBoard = require('./sockets/board');
+
 
 // middleware
 app.use(express.json());
@@ -43,8 +48,41 @@ app.use('/api/participants', require('./api/routes/participants'));
 app.use('/api/lists', require('./api/routes/lists'));
 app.use('/api/cards', require('./api/routes/cards'));
 
+
+// Socket IO
+io.on('connection', (socket) => {	
+	// enter room (board)
+	socket.on('enter-board-room', (data) => {
+		socketsBoard.enterBoard(io, socket, data);
+	});
+
+	// leave room (board)
+	socket.on('leave-board-room', (data) => {
+		socketsBoard.leaveBoard(io, socket, data);
+	});
+
+	// update board for other participants
+	socket.on('update-board-room', (data) => {
+		socketsBoard.updateBoard(io, socket, data);
+	});
+
+	// notify single participant 
+	socket.on('notify-board-room-participant', (data) => {
+		socketsBoard.notifyParticipant(io, socket, data);
+	});
+
+	// notify all participants 
+	socket.on('notify-board-room-all-participants', (data) => {
+		socketsBoard.notifyAllParticipants(io, socket, data);
+	});
+});
+
 // Server
 const PORT = process.env.PORT || config.PORT;
-app.listen(PORT, () => {
+// app.listen(PORT, () => {
+	// console.log(`Server started on port: ${PORT}`);
+// });
+http.listen(PORT, () => {
 	console.log(`Server started on port: ${PORT}`);
 });
+

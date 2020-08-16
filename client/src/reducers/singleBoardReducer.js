@@ -1,4 +1,8 @@
 import {
+	// remote changes
+	SINGLE_BOARD_APPLYING_CHANGES,
+	SINGLE_BOARD_APPLIED_CHANGES,
+
 	// load board
 	SINGLE_BOARD_LOADING,
 	SINGLE_BOARD_LOADED,
@@ -34,15 +38,24 @@ import {
 	
 	// Drag and Drop
 	BOARD_CARD_DRAG_DROP_SWITCH,
-	BOARD_CARD_DRAG_DROP_RELOCATE
+	BOARD_CARD_DRAG_DROP_RELOCATE,
+
+	// participants
+	BOARD_PARTICIPANT_DELETING,
+	BOARD_PARTICIPANT_DELETED,
+	BOARD_PARTICIPANTS_FOUND,
+	BOARD_PARTICIPANTS_ADDED
 } from '../actions/types';
 
 const initialState = {
 	// board
 	board: {},
+	isRemovingParticipant: false,
+	isApplyingChanges: false,
 	isRenamingTitle: false,
 	isLoading: false,
 	isDeleting: false,
+	isFailed: false,
 	
 	// lists 
 	isListLoading: false,
@@ -55,11 +68,28 @@ const initialState = {
 
 	// cards
 	isCardCreating: false,
-	cardCreatingListId: ''
+	cardCreatingListId: '',
+
+	// participants
+	potentialParticipants: []
 }
 
 export default (state = initialState, action) => {
 	switch (action.type) {
+		// apply remote changes
+		case SINGLE_BOARD_APPLYING_CHANGES:
+			return {
+				...state,
+				isApplyingChanges: true
+			}
+
+		case SINGLE_BOARD_APPLIED_CHANGES:
+			return {
+				...state,
+				isApplyingChanges: false,
+				board: action.payload.board
+			}
+
 		// load single board
 		case SINGLE_BOARD_LOADING:
 			return {
@@ -77,6 +107,7 @@ export default (state = initialState, action) => {
 		case SINGLE_BOARD_FAIL:
 			return {
 				...state,
+				isFailed: true,
 				isLoading: false,
 				board: {}
 			}
@@ -223,6 +254,33 @@ export default (state = initialState, action) => {
 				...state,
 				board: { ...state.board, lists: [...action.payload.lists] }
 			}
+
+		// Participants
+		case BOARD_PARTICIPANT_DELETING: 
+			return {
+				...state,
+				isRemovingParticipant: true
+			}
+
+		case BOARD_PARTICIPANT_DELETED: 
+			return {
+				...state,
+				isRemovingParticipant: false,
+				board: { ...action.payload.board }
+			}
+
+		case BOARD_PARTICIPANTS_FOUND:
+			return {
+				...state,
+				potentialParticipants: [...action.payload.users]
+			}
+
+		case BOARD_PARTICIPANTS_ADDED:
+			return {
+				...state,
+				board: { ...action.payload.board }
+			}
+
 
 		default:
 			return state;

@@ -1,3 +1,8 @@
+// API
+import {
+	getAllUsers
+} from '../api/users';
+
 import {
 	getBoardById,
 	updateBoardById,
@@ -13,8 +18,17 @@ import {
 	switchCard,
 	relocateCard
 } from '../api/lists';
+
 import { createSingleCard } from '../api/cards';
+
+import { removeParticipantById, addNewParticipantByUsername } from '../api/participants';
+
+// TYPES
 import {
+	// remote changes applied
+	SINGLE_BOARD_APPLYING_CHANGES,
+	SINGLE_BOARD_APPLIED_CHANGES,
+
 	// load board
 	SINGLE_BOARD_LOADING,
 	SINGLE_BOARD_LOADED,
@@ -50,9 +64,38 @@ import {
 
 	// Drag and Drop
 	BOARD_CARD_DRAG_DROP_SWITCH,
-	BOARD_CARD_DRAG_DROP_RELOCATE
+	BOARD_CARD_DRAG_DROP_RELOCATE,
+
+	// remove participant
+	BOARD_PARTICIPANT_DELETING,
+	BOARD_PARTICIPANT_DELETED,
+	BOARD_PARTICIPANTS_FOUND,
+	BOARD_PARTICIPANTS_ADDED
 } from './types';
 
+// SOCKETS
+import { updateBoardRoom, notifyUser, notifyAllUsers } from '../sockets/boardSockets';
+
+// SOCKET IO
+// update a board when other participants applied changes
+export const applyRemoteChanges = ({ boardId }) => (dispatch) => {
+	dispatch({ type: SINGLE_BOARD_APPLYING_CHANGES });
+
+	getBoardById({ boardId })
+		.then(({ data }) => {
+			dispatch({
+				type: SINGLE_BOARD_APPLIED_CHANGES,
+				payload: {
+					board: data.board
+				}
+			});
+		})
+		.catch((err) => {
+			console.error(err);
+		})
+}
+
+// BOARD
 // single board is loading
 export const loadSingleBoard = (boardId) => (dispatch) => {
 	// boards are being loaded
@@ -68,9 +111,7 @@ export const loadSingleBoard = (boardId) => (dispatch) => {
 			});
 		})
 		.catch((err) => {
-			console.error(err);
-			// window.location.replace('/');
-			
+			console.error(err);			
 			dispatch({ type: SINGLE_BOARD_FAIL });
 		});
 }
@@ -89,6 +130,10 @@ export const renameSingleBoard = ({ boardId, newTitle }) => (dispatch) => {
 	});
 
 	updateBoardById({ boardId, newTitle })
+		.then(() => {
+			// make other users update their boards
+			updateBoardRoom({ roomId: boardId });
+		})
 		.catch((err) => {
 			console.error(err);	
 		});
@@ -100,6 +145,15 @@ export const deletingBoard = ({ boardId }) => (dispatch) => {
 
 	deleteBoardById({ boardId })
 		.then(() => {
+			// notify other board participants
+			notifyAllUsers({
+				boardId,
+				info: {
+					msg: 'Shared board has been deleted',
+					redirect: '/',
+					type: 'DELETE'
+				}
+			});
 			// redirect to homepage
 			window.location.replace('/');
 			dispatch({ type: SINGLE_BOARD_DELETED });
@@ -109,7 +163,7 @@ export const deletingBoard = ({ boardId }) => (dispatch) => {
 		});
 }
 
-// new list is being created
+// LISTS
 export const loadList = (data) => (dispatch) => {
 	dispatch({
 		type: BOARD_LIST_LOADING,
@@ -133,11 +187,15 @@ export const loadList = (data) => (dispatch) => {
 		})
 }
 
+// new list is being created
 export const createList = (body) => (dispatch) => {
 	dispatch({ type: BOARD_LIST_CREATING });
 
 	createSingleList({ body })
 		.then(({ data }) => {
+			// make other users update their boards
+			updateBoardRoom({ roomId: body.boardId });
+			
 			dispatch({
 				type: BOARD_LIST_CREATED,
 				payload: {
@@ -162,6 +220,9 @@ export const deleteList = ({ boardId, listId }) => (dispatch) => {
 
 	deleteListById({ listId, boardId })
 		.then(({ data }) => {
+			// make other users update their boards
+			updateBoardRoom({ roomId: boardId });
+			
 			dispatch({
 				type: BOARD_LIST_DELETED,
 				payload: {
@@ -173,18 +234,6 @@ export const deleteList = ({ boardId, listId }) => (dispatch) => {
 			dispatch({ type: BOARD_LIST_FAIL });
 			console.error(err);
 		});
-
-	// dispatch({
-	// 	type: BOARD_LIST_DELETE,
-	// 	payload: {
-	// 		id: listId
-	// 	}
-	// });
-
-	// deleteListById({ listId, boardId })
-	// 	.catch((err) => {
-	// 		console.error(err);
-	// 	});
 }
 
 // rename list
@@ -198,12 +247,17 @@ export const renameList = ({ boardId, listId, newTitle }) => (dispatch) => {
 	});
 
 	updateListById({ listId, boardId, newTitle })
+		.then(() => {
+			// make other users update their boards
+			updateBoardRoom({ roomId: boardId });
+		})
 		.catch((err) => {
 			console.error(err);
 		});
 
 }
 
+// CARDS
 // create a new card
 export const createCard = (body) => (dispatch) => {
 	dispatch({
@@ -215,6 +269,9 @@ export const createCard = (body) => (dispatch) => {
 
 	createSingleCard({ body })
 		.then(({ data }) => {
+			// make other users update their boards
+			updateBoardRoom({ roomId: body.boardId });
+
 			dispatch({
 				type: BOARD_CARD_CREATED,
 				payload: {
@@ -227,7 +284,7 @@ export const createCard = (body) => (dispatch) => {
 		});
 } 
 
-// Drag and Drop
+// DRAG AND DROP
 // switch cards
 export const switchCards = ({ boardId, listId, lists, cards }) => (dispatch) => {
 	const afterSwitchLists = lists.map((list) => {
@@ -250,6 +307,10 @@ export const switchCards = ({ boardId, listId, lists, cards }) => (dispatch) => 
 		listId,
 		cards
 	})
+		.then(() => {
+			// make other users update their boards
+			updateBoardRoom({ roomId: boardId });
+		})
 		.catch((err) => {
 			console.error(err);
 		});
@@ -285,6 +346,88 @@ export const relocatedCards = ({ boardId, lists, removeListId, listId, cardItem 
 		to: listId,
 		cardId: cardItem._id
 	})
+		.then(() => {
+			// make other users update their boards
+			updateBoardRoom({ roomId: boardId });
+		})
+		.catch((err) => {
+			console.error(err);
+		});
+}
+
+// PARTICIPANTS
+export const removeParticipant = (data) => (dispatch) => {
+	// data: { boardId, participantId }
+	dispatch({ type: BOARD_PARTICIPANT_DELETING });
+
+	removeParticipantById(data)
+		.then((res) => {
+			dispatch({
+				type: BOARD_PARTICIPANT_DELETED,
+				payload: {
+					board: res.data.board
+				}
+			});
+
+			// make other users update their boards
+			updateBoardRoom({ roomId: data.boardId });
+
+			// notify excluded participant
+			notifyUser({
+				roomId: data.boardId,
+				userId: data.participantId,
+				info: {
+					msg: 'You were excluded from the board',
+					redirect: '/',
+					type: 'EXCLUDE',
+					user: res.data.participant
+				}
+			});
+		})
+		.catch((err) => {
+			console.error(err);
+		});
+}
+
+export const inviteNewParticipant = (data) => (dispatch) => {
+	addNewParticipantByUsername(data)
+		.then((res) => {
+			dispatch({
+				type: BOARD_PARTICIPANTS_ADDED,
+				payload: {
+					board: res.data.board
+				}
+			});
+
+			// make other users update their boards
+			updateBoardRoom({ roomId: data.boardId });
+
+			// notify included participant
+			notifyUser({
+				roomId: data.boardId,
+				username: data.username,
+				info: {
+					msg: 'You were added to the board',
+					type: 'INCLUDE',
+					user: res.data.participant
+				}
+			});
+		})
+		.catch((err) => {
+			console.error(err);
+		});
+}
+
+export const findPotentialParticipants = () => (dispatch) => {
+	getAllUsers()
+		.then(({data}) => {
+			dispatch({
+				type: BOARD_PARTICIPANTS_FOUND,
+				payload: {
+					users: data.users
+				}
+			});
+		})
 		.catch((err) => {
 			console.error(err);
 		});

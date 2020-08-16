@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { startRenamingSingleBoard, deletingBoard } from '../../actions/singleBoardActions';
+import { startRenamingSingleBoard, deletingBoard, removeParticipant, findPotentialParticipants, inviteNewParticipant } from '../../actions/singleBoardActions';
 
 import SidebarItem from '../SidebarItem/SidebarItem';
 
@@ -8,6 +8,10 @@ import SidebarItem from '../SidebarItem/SidebarItem';
 import './Sidebar.scss';
 
 class Sidebar extends Component {
+	componentDidMount = () => {
+		this.props.findPotentialParticipants();
+	}
+
 	componentDidUpdate = () => {
 		// check for board
 		if (!this.props.board) {
@@ -19,15 +23,34 @@ class Sidebar extends Component {
 		this.props.deletingBoard({ boardId: this.props.board._id });
 	}
 
+	removeParticipant = (participantId) => {
+		this.props.removeParticipant({ boardId: this.props.board._id, participantId });
+	}
+
+	addParticipant = (username) => {
+		this.props.inviteNewParticipant({ boardId: this.props.board._id, username });
+	}
+
 	isBoardAdmin = () => {
 		let isAdmin = false;
 
-		this.props.board.participants.map(({ role, user }) => {
+		this.props.board.participants.forEach(({ role, user }) => {
 			if (user._id === this.props.user._id && role === 'admin') 
 				isAdmin = true;
 		});
 
 		return isAdmin;
+	}
+
+	isBoardParticipant = (userId) => {
+		let isParticipant = false;
+
+		this.props.board.participants.forEach(({ user }) => {
+			if (user._id === userId) 
+				isParticipant = true;
+		});
+
+		return isParticipant;
 	}
 
 	render() { 
@@ -49,17 +72,25 @@ class Sidebar extends Component {
 									title="add participant"
 									className="sidebar__menu-item"
 									icon="/assets/imgs/add.svg"
-									modal={{ title: 'Add participant', autoComplete: true }}
-									// onClick={}
-									// onSearch={}
+									modal={{
+										title: 'Add participant',
+										autoComplete: true,
+										items: this.props.potentialParticipants,
+										isInvalid: this.isBoardParticipant,
+										onInvite: this.addParticipant
+									}}
 								/>
 								<SidebarItem
 									tag="li"
 									title="remove participant"
 									className="sidebar__menu-item"
 									icon="/assets/imgs/delete.svg"
-									modal={{ title: 'Remove participant', items: this.props.board.participants }}
-									// onClick={}
+									modal={{
+										title: 'Remove participant',
+										items: this.props.board.participants,
+										userId: this.props.user._id,
+										onRemove: this.removeParticipant
+									}}
 								/>
 							</Fragment>
 						) : null }
@@ -82,11 +113,12 @@ class Sidebar extends Component {
 const mapStateToProps = (state) => ({
 	isDeleting: state.singleBoard.isDeleting,
 	board: state.singleBoard.board,
-	user: state.auth.user
+	user: state.auth.user,
+	potentialParticipants: state.singleBoard.potentialParticipants
 });
 
 
 export default connect(
 	mapStateToProps,
-	{ startRenamingSingleBoard, deletingBoard }
+	{ startRenamingSingleBoard, deletingBoard, removeParticipant, findPotentialParticipants, inviteNewParticipant }
 )(Sidebar);

@@ -36,3 +36,9 @@ body {
 	padding: 7px 10px;
 	border-radius: 7px;
 }
+
+// override existing react-toastify styles
+.Toastify__toast--info {
+	background-color: $high-light-supporting-color !important;
+	border-radius: 5px !important;
+}

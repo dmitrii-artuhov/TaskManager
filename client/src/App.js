@@ -13,18 +13,20 @@ import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import Profile from './pages/Profile';
 import Board from './pages/Board';
-// protected routes
+
+// components
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
+import { ToastContainer } from 'react-toastify';
 
 // styles
 import './style.scss';
+import 'react-toastify/dist/ReactToastify.css';
 // design inspiration - https://dribbble.com/shots/10566652--1-1DT-Dashboard/attachments/2349473?mode=media
-
 
 class App extends Component {
   // use this carefully
   componentWillMount = () => {
-    store.dispatch(loadUser());
+    store.dispatch(loadUser());  
   }
 
   render() {
@@ -38,6 +40,7 @@ class App extends Component {
             <Route path="*" component={ NotFound } />
           </Switch>
         </Router>
+        <ToastContainer />
       </Provider>
     );
   }

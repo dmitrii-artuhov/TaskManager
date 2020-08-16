@@ -74,7 +74,7 @@ class FullviewCard extends Component {
 
 	// close fullview card
 	closeCard = () => {
-		this.props.unselectCard();
+		this.props.unselectCard({ boardId: this.props.meta.boardId });
 	}
 
 	// update card 

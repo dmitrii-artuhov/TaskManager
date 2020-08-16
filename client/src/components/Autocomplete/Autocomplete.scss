@@ -1,0 +1,5 @@
+@import '../../variables.scss';
+
+.participants-users__item--active {
+	background-color: $faded-background-color !important;
+}

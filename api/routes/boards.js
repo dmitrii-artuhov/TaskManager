@@ -136,7 +136,6 @@ router.delete('/delete/:id', auth.ensureAuthentication, isBoardAdmin.checkBoardA
 			}
 			
 			// delete the board from admin's ownBoards list
-			// I don't delete board from all participants, because they just won't be able to access it afterwards anyway 
 			User.findOne({ _id: userId })
 				.then((admin) => {
 					// filtering out the board that is to be deleted
@@ -145,11 +144,26 @@ router.delete('/delete/:id', auth.ensureAuthentication, isBoardAdmin.checkBoardA
 					admin.save()
 						.catch((err) => {
 							console.error(err);
-						})
+						});
 				})
 				.catch((err) => {
 					console.error(err);
 				});
+
+			// removing board id from participants' shared board lists
+			board.participants.forEach(({ user }) => {
+				User.findById(user)
+					.then((user) => {
+						user.sharedBoards = user.sharedBoards.filter((item) => item != id);
+						user.save()
+							.catch((err) => {
+								console.error('Error while saving changes for user object', err);
+							});
+					})
+					.catch((err) => {
+						console.error('Error while removing deleted board from participants', err);
+					});
+			});
 
 			// deleting the board
 			board.delete()

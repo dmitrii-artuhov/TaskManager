@@ -87,10 +87,14 @@ export default class SidebarItem extends Component {
 						<ParticipantsModal
 							onClose={ this.toggleModal }
 							isOpen={ this.state.isOpen }
+							isInvalid={this.props.modal.isInvalid}
+							onInvite={this.props.modal.onInvite}
 							title={this.props.modal.title}
 							autoComplete={this.props.modal.autoComplete}
+							userId={this.props.modal.userId}
 							items={this.props.modal.items}
 							onClick={this.props.onClick}
+							onRemove={this.props.modal.onRemove}
 						/>
 					</CSSTransition>
 				) : (

@@ -19,3 +19,7 @@ export const logoutUser = () => {
 export const updateUser = ({ id, avatar }) => {
 	return axios.put(`/api/users/update/${id}`, { avatar });
 }
+
+export const getAllUsers = () => {
+	return axios.get('/api/users/find');
+}

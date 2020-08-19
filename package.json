@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node index",
     "server": "nodemon index",
-    "dev": "concurrently \"npm run server\" \"cd ./client && npm run client\""
+    "dev": "concurrently \"npm run server\" \"cd ./client && npm run client\"",
+    "heroku-postbuild": "cd client && npm install && npm run build"
   },
   "author": "Dmitrii Art",
   "license": "ISC",

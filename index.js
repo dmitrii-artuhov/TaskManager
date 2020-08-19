@@ -21,10 +21,10 @@ app.use(express.json());
 app.use(
   session({
     secret: config.secret,
-    resave: true,
-		saveUninitialized: true,
-		// saveUninitialized: false,
-    // resave: false
+    // resave: true,
+		// saveUninitialized: true,
+		saveUninitialized: false,
+    resave: false
   })
 );
 

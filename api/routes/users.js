@@ -101,8 +101,8 @@ router.post('/login', (req, res, next) => {
 
 // logout user
 router.get('/logout', (req, res) => {
-	req.logOut();
-	// req.logout();
+	req.logout();
+	req.session.destroy();
 	res.json({ msg: 'Logged out successfully', type: 'success' });
 });
 

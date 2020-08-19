@@ -161,11 +161,11 @@
 			cursor: pointer;
 			display: block;
 			font-size: $regular-font-size;
-			opacity: 50%;
+			opacity: 0.5;
 			border-bottom: 1px solid rgba(0, 0, 0, .2);
 
 			&:hover {
-				opacity: 80%
+				opacity: 0.8
 			}
 		}
 	}

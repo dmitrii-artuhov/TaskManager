@@ -3,6 +3,7 @@ const app = express();
 const config = require('./config/config.json');
 const mongoose = require('mongoose');
 const session = require('express-session');
+const path = require('path');
 // Passport
 const passport = require('passport');
 require('./middleware/passport')(passport);
@@ -10,6 +11,7 @@ require('./middleware/passport')(passport);
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 const socketsBoard = require('./sockets/board');
+
 
 
 // middleware

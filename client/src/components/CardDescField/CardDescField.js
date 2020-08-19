@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import Skeleton from "react-loading-skeleton";
 
-// styles
-import './CardDescField.scss';
-
 export default class CardDescField extends Component {
 	constructor(props) {
 		super(props);

@@ -120,7 +120,7 @@
 }
 
 
-@media (max-width: 576px) {
+@media all and (max-width: 576px) {
 	.register {
 		&__alert {
 			padding: 10px 15px !important;

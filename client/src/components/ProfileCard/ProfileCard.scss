@@ -111,7 +111,7 @@
 }
 
 
-@media (max-width: 768px) {
+@media all and (max-width: 768px) {
 	.profile-card {
 		margin-top: 30px;
 		flex-direction: column-reverse;
@@ -130,7 +130,7 @@
 
 }
 
-@media (max-width: 576px) {
+@media all and (max-width: 576px) {
 	.profile-card {
 		&__field {
 			ul {

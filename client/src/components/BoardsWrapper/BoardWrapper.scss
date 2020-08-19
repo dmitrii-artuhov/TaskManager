@@ -20,7 +20,7 @@
 }
 
 
-@media (max-width: 768px) {
+@media all and (max-width: 768px) {
 	.boards {
 		&__content {
 			justify-content: center;

@@ -1,7 +1,8 @@
 @import '../../variables.scss';
 
 .intro {
-	
+	margin: unset; // debug reasons
+
 	p {
 		color: #5A5757;
 		font-size: $homepage-text-font-size;
@@ -87,7 +88,6 @@
 				margin-right: 40px;
 
 				h2 {
-					font-size: calc();
 					color: #000;
 					font-weight: 700;
 					position: relative;

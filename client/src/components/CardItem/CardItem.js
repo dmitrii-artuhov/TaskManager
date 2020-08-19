@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
 
-// styles
-import './CardItem.scss';
-
 /*
 // drag and drop stuff
 props:

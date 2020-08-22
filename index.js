@@ -20,7 +20,7 @@ app.use(express.json());
 // Express session
 app.use(
   session({
-    secret: config.secret,
+    secret: process.env.secret || config.secret,
     // resave: true,
 		// saveUninitialized: true,
 		saveUninitialized: false,

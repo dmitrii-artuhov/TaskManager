@@ -105,12 +105,12 @@
 				padding: 2px 5px;
 				cursor: pointer;
 				display: block;
-				opacity: 50%;
+				opacity: .5;
 				border-bottom: 1px solid rgba(0, 0, 0, .2);
 				transition: all .1s ease-in;
 
 				&:hover {
-					opacity: 80%
+					opacity: .8
 				}
 			}
 		}
